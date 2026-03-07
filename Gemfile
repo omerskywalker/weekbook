@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 ruby "3.2.2"
@@ -11,12 +13,12 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 
 # Asset + JS
-gem "sprockets-rails"
 gem "importmap-rails"
+gem "sprockets-rails"
 
 # Hotwire
-gem "turbo-rails"
 gem "stimulus-rails"
+gem "turbo-rails"
 
 # Styling
 gem "tailwindcss-rails"
@@ -55,22 +57,25 @@ gem "dotenv-rails"
 gem "bootsnap", require: false
 
 # Timezone for Windows
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 group :development, :test do
   # Debugging
-  gem "debug", platforms: %i[ mri windows ]
+  gem "debug", platforms: %i[mri windows]
 
   # Testing
-  gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "rspec-rails"
 end
 
 group :development do
-  gem "web-console"
+  gem "bullet"
   gem "foreman"
   gem "letter_opener"
-  gem "bullet"
+  gem "rubocop", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "web-console"
 end
 
 group :test do

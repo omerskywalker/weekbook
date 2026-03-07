@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ProfilesController < ApplicationController
-  before_action :authenticate_user!, only: [:edit, :update]
+  before_action :authenticate_user!, only: %i[edit update]
 
   def show
     @user = User.find_by!(username: params[:username])
@@ -15,7 +17,7 @@ class ProfilesController < ApplicationController
     if @user.update(profile_params)
       redirect_to user_profile_path(@user.username), notice: "Profile updated."
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

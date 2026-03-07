@@ -1,15 +1,16 @@
 <% if user_signed_in? %>
-
   <section class="space-y-4">
-    <h1 class="text-3xl font-semibold tracking-tight">
-      Welcome back
-    </h1>
-
+    <h1 class="text-3xl font-semibold tracking-tight">Welcome back</h1>
     <p class="text-zinc-600">
-      Your weekly recaps will appear here soon.
+      Your weekly recaps and private entries will live here soon.
     </p>
-  </section>
 
+    <% if current_user.username.present? %>
+      <%= link_to "View profile", user_profile_path(current_user.username), class: "inline-block rounded-md bg-black px-4 py-2 text-sm text-white" %>
+    <% else %>
+      <%= link_to "Complete your profile", edit_profile_path, class: "inline-block rounded-md bg-black px-4 py-2 text-sm text-white" %>
+    <% end %>
+  </section>
 <% else %>
 
   <section class="max-w-xl space-y-5">

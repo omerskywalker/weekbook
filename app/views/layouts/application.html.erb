@@ -19,13 +19,17 @@
 
       <div class="flex items-center gap-4 text-sm">
         <% if user_signed_in? %>
-          <%= link_to "Profile", "#", class: "hover:underline" %>
+  <% if current_user.username.present? %>
+    <%= link_to "Profile", user_profile_path(current_user.username), class: "hover:underline" %>
+  <% else %>
+    <%= link_to "Complete profile", edit_profile_path, class: "hover:underline" %>
+  <% end %>
 
-          <%= link_to "Sign out",
-              destroy_user_session_path,
-              data: { turbo_method: :delete },
-              class: "text-zinc-600 hover:text-black" %>
-        <% else %>
+  <%= link_to "Sign out",
+      destroy_user_session_path,
+      data: { turbo_method: :delete },
+      class: "text-zinc-600 hover:text-black" %>
+<% else %>
           <%= link_to "Sign in",
               new_user_session_path,
               class: "text-zinc-600 hover:text-black" %>

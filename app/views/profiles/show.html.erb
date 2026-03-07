@@ -1,4 +1,21 @@
-<div>
-  <h1 class="font-bold text-4xl">Profiles#show</h1>
-  <p>Find me in app/views/profiles/show.html.erb</p>
-</div>
+<section class="max-w-2xl space-y-6">
+  <div class="rounded-xl border bg-white p-6 shadow-sm">
+    <div class="space-y-2">
+      <p class="text-sm text-zinc-500">@<%= @user.username %></p>
+
+      <h1 class="text-2xl font-semibold tracking-tight">
+        <%= @user.name_for_display %>
+      </h1>
+
+      <% if @user.bio.present? %>
+        <p class="text-zinc-700"><%= @user.bio %></p>
+      <% else %>
+        <p class="text-zinc-500">No bio yet.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="rounded-xl border border-dashed bg-zinc-50 p-8 text-center text-zinc-500">
+    Weekly recaps will appear here soon.
+  </div>
+</section>

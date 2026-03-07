@@ -5,30 +5,42 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-    <nav class="border-b bg-white">
-  <div class="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
-    <%= link_to "Weekbook", root_path, class: "font-semibold tracking-tight" %>
+  <body class="min-h-screen bg-zinc-50 text-zinc-900">
 
-    <div class="flex items-center gap-3 text-sm">
-      <% if user_signed_in? %>
-        <%= link_to "Profile", "#", class: "hover:underline" %>
-        <%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete }, class: "hover:underline" %>
-      <% else %>
-        <%= link_to "Sign in", new_user_session_path, class: "hover:underline" %>
-        <%= link_to "Sign up", new_user_registration_path, class: "hover:underline" %>
-      <% end %>
+  <nav class="border-b bg-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+      <%= link_to "Weekbook", root_path, class: "font-semibold text-lg tracking-tight" %>
+
+      <div class="flex items-center gap-4 text-sm">
+        <% if user_signed_in? %>
+          <%= link_to "Profile", "#", class: "hover:underline" %>
+
+          <%= link_to "Sign out",
+              destroy_user_session_path,
+              data: { turbo_method: :delete },
+              class: "text-zinc-600 hover:text-black" %>
+        <% else %>
+          <%= link_to "Sign in",
+              new_user_session_path,
+              class: "text-zinc-600 hover:text-black" %>
+
+          <%= link_to "Sign up",
+              new_user_registration_path,
+              class: "rounded-md bg-black px-3 py-1.5 text-white" %>
+        <% end %>
+      </div>
     </div>
-  </div>
-</nav>
-      <%= yield %>
-    </main>
-  </body>
+  </nav>
+
+  <main class="mx-auto max-w-5xl px-4 py-10">
+    <%= yield %>
+  </main>
+
+</body>
 </html>

@@ -1,16 +1,41 @@
-<div class="mx-auto max-w-5xl px-4 py-10">
-  <% if user_signed_in? %>
-    <h1 class="text-2xl font-semibold">Welcome back</h1>
-    <p class="mt-2 text-gray-600">Your week will show up here soon.</p>
-  <% else %>
-    <h1 class="text-3xl font-semibold tracking-tight">Weekbook</h1>
-    <p class="mt-3 text-gray-600 max-w-xl">
-      Reply to simple prompts during the week. Get a calm, authentic weekly recap you can share.
+<% if user_signed_in? %>
+
+  <section class="space-y-4">
+    <h1 class="text-3xl font-semibold tracking-tight">
+      Welcome back
+    </h1>
+
+    <p class="text-zinc-600">
+      Your weekly recaps will appear here soon.
+    </p>
+  </section>
+
+<% else %>
+
+  <section class="max-w-xl space-y-5">
+
+    <h1 class="text-4xl font-semibold tracking-tight">
+      Weekbook
+    </h1>
+
+    <p class="text-lg text-zinc-600">
+      Capture your week through small reflections.
+      Weekbook turns quick prompts throughout the week
+      into a meaningful weekly recap.
     </p>
 
-    <div class="mt-6 flex gap-3">
-      <%= link_to "Create account", new_user_registration_path, class: "rounded-md bg-black px-4 py-2 text-white text-sm" %>
-      <%= link_to "Sign in", new_user_session_path, class: "rounded-md border px-4 py-2 text-sm" %>
+    <div class="flex gap-3 pt-3">
+
+      <%= link_to "Create account",
+          new_user_registration_path,
+          class: "rounded-md bg-black px-4 py-2 text-white text-sm" %>
+
+      <%= link_to "Sign in",
+          new_user_session_path,
+          class: "rounded-md border border-zinc-300 px-4 py-2 text-sm" %>
+
     </div>
-  <% end %>
-</div>
+
+  </section>
+
+<% end %>

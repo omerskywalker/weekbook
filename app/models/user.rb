@@ -9,7 +9,7 @@ class User < ApplicationRecord
             length: { minimum: 3, maximum: 30 },
             format: {
               with: /\A[a-zA-Z0-9_]+\z/,
-              message: "only allows letters, numbers, and underscores"
+              message: 'only allows letters, numbers, and underscores'
             },
             allow_blank: true
 
@@ -17,6 +17,6 @@ class User < ApplicationRecord
   validates :bio, length: { maximum: 280 }, allow_blank: true
 
   def name_for_display
-    display_name.presence || username.presence || email.split("@").first
+    display_name.presence || username.presence || email.split('@').first
   end
 end

@@ -15,7 +15,7 @@ class ProfilesController < ApplicationController
     @user = current_user
 
     if @user.update(profile_params)
-      redirect_to user_profile_path(@user.username), notice: "Profile updated."
+      redirect_to user_profile_path(@user.username), notice: 'Profile updated.'
     else
       render :edit, status: :unprocessable_content
     end

@@ -1,4 +1,32 @@
-<div>
-  <h1 class="font-bold text-4xl">Profiles#edit</h1>
-  <p>Find me in app/views/profiles/edit.html.erb</p>
-</div>
+<section class="mx-auto max-w-xl space-y-6">
+  <div>
+    <h1 class="text-2xl font-semibold tracking-tight">Edit profile</h1>
+    <p class="mt-1 text-sm text-zinc-500">
+      Update your public identity for Weekbook.
+    </p>
+  </div>
+
+  <div class="rounded-xl border bg-white p-6 shadow-sm">
+    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-5" do |f| %>
+      <div>
+        <%= f.label :username, class: "block text-sm font-medium" %>
+        <%= f.text_field :username, class: "mt-1 w-full rounded-md border px-3 py-2" %>
+        <p class="mt-1 text-xs text-zinc-500">Letters, numbers, and underscores only.</p>
+      </div>
+
+      <div>
+        <%= f.label :display_name, class: "block text-sm font-medium" %>
+        <%= f.text_field :display_name, class: "mt-1 w-full rounded-md border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.label :bio, class: "block text-sm font-medium" %>
+        <%= f.text_area :bio, rows: 5, class: "mt-1 w-full rounded-md border px-3 py-2" %>
+      </div>
+
+      <div>
+        <%= f.submit "Save profile", class: "rounded-md bg-black px-4 py-2 text-sm text-white" %>
+      </div>
+    <% end %>
+  </div>
+</section>

@@ -13,6 +13,14 @@
         <p class="text-zinc-500">No bio yet.</p>
       <% end %>
     </div>
+
+    <% if user_signed_in? && current_user == @user %>
+      <div class="mt-4">
+        <%= link_to "Edit profile",
+            edit_profile_path,
+            class: "text-sm text-zinc-600 hover:text-black hover:underline" %>
+      </div>
+    <% end %>
   </div>
 
   <div class="rounded-xl border border-dashed bg-zinc-50 p-8 text-center text-zinc-500">

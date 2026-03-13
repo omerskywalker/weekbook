@@ -12,6 +12,25 @@
       <% else %>
         <p class="text-zinc-500">No bio yet.</p>
       <% end %>
+      <div class="flex gap-6 pt-2 text-sm text-zinc-600">
+  <p><span class="font-medium text-zinc-900"><%= @user.followers.count %></span> followers</p>
+  <p><span class="font-medium text-zinc-900"><%= @user.following.count %></span> following</p>
+</div>
+<% if user_signed_in? && current_user != @user %>
+  <div class="pt-4">
+    <% if current_user.following?(@user) %>
+      <%= button_to "Unfollow",
+          follow_user_path(@user.username),
+          method: :delete,
+          class: "rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-100" %>
+    <% else %>
+      <%= button_to "Follow",
+          follow_user_path(@user.username),
+          method: :post,
+          class: "rounded-md bg-black px-4 py-2 text-sm text-white" %>
+    <% end %>
+  </div>
+<% end %>
     </div>
 
     <% if user_signed_in? && current_user == @user %>

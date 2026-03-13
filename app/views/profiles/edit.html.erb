@@ -28,8 +28,13 @@
   <div class="flex items-center gap-4">
 
     <% if @user.avatar.attached? %>
-      <%= image_tag @user.avatar.variant(resize_to_fill: [80,80]),
-          class: "h-20 w-20 rounded-full object-cover border" %>
+      <% if @user.avatar.attached? %>
+  <%= image_tag @user.avatar.variant(
+      resize_to_fill: [96, 96],
+      saver: { strip: true, quality: 80 }
+    ),
+    class: "mb-4 h-24 w-24 rounded-full border object-cover" %>
+<% end %>
     <% else %>
       <div class="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
         avatar

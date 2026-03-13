@@ -3,7 +3,13 @@
     <div class="space-y-2">
 
       <% if @user.avatar.attached? %>
-        <%= image_tag @user.avatar, class: "h-20 w-20 rounded-full object-cover" %>
+        <% if @user.avatar.attached? %>
+  <%= image_tag @user.avatar.variant(
+      resize_to_fill: [96, 96],
+      saver: { strip: true, quality: 80 }
+    ),
+    class: "mb-4 h-24 w-24 rounded-full border object-cover" %>
+<% end %>
       <% else %>
         <div class="h-20 w-20 rounded-full bg-zinc-200"></div>
       <% end %>

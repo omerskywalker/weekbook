@@ -1,6 +1,19 @@
 <section class="max-w-2xl space-y-6">
   <div class="rounded-xl border bg-white p-6 shadow-sm">
     <div class="space-y-2">
+
+      <% if @user.avatar.attached? %>
+        <% if @user.avatar.attached? %>
+  <%= image_tag @user.avatar.variant(
+      resize_to_fill: [96, 96],
+      saver: { strip: true, quality: 80 }
+    ),
+    class: "mb-4 h-24 w-24 rounded-full border object-cover" %>
+<% end %>
+      <% else %>
+        <div class="h-20 w-20 rounded-full bg-zinc-200"></div>
+      <% end %>
+      
       <p class="text-sm text-zinc-500">@<%= @user.username %></p>
 
       <h1 class="text-2xl font-semibold tracking-tight">

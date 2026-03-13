@@ -5,7 +5,9 @@
       Set up your public identity for Weekbook.
     </p>
 
-    <%= form_with model: @user, url: profile_path, method: :patch, class: "mt-6 space-y-5" do |f| %>
+   <%= form_with model: @user, url: profile_path, method: :patch,
+              class: "mt-6 space-y-5",
+              html: { multipart: true } do |f| %>
       <% if @user.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 p-4">
           <h2 class="font-semibold text-red-800">
@@ -20,6 +22,34 @@
       <% end %>
 
       <div>
+        <div class="space-y-3">
+  <%= f.label :avatar, class: "block text-sm font-medium text-gray-700" %>
+
+  <div class="flex items-center gap-4">
+
+    <% if @user.avatar.attached? %>
+      <% if @user.avatar.attached? %>
+  <%= image_tag @user.avatar.variant(
+      resize_to_fill: [96, 96],
+      saver: { strip: true, quality: 80 }
+    ),
+    class: "mb-4 h-24 w-24 rounded-full border object-cover" %>
+<% end %>
+    <% else %>
+      <div class="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+        avatar
+      </div>
+    <% end %>
+
+    <label class="cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-50">
+      Change avatar
+      <%= f.file_field :avatar,
+          accept: "image/*",
+          class: "hidden" %>
+    </label>
+
+  </div>
+</div>
         <%= f.label :username, class: "mb-1 block text-sm font-medium text-gray-700" %>
         <%= f.text_field :username,
           class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",

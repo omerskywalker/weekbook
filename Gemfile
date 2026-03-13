@@ -66,6 +66,9 @@ group :development, :test do
   # Testing
   gem 'factory_bot_rails'
   gem 'rspec-rails'
+
+  # AWS S3 for Active Storage
+  gem 'aws-sdk-s3', require: false
 end
 
 group :development do

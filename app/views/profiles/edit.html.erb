@@ -5,9 +5,9 @@
       Set up your public identity for Weekbook.
     </p>
 
-   <%= form_with model: @user, url: profile_path, method: :patch,
-              class: "mt-6 space-y-5",
-              html: { multipart: true } do |f| %>
+    <%= form_with model: @user, url: profile_path, method: :patch,
+                  class: "mt-6 space-y-5",
+                  html: { multipart: true } do |f| %>
       <% if @user.errors.any? %>
         <div class="rounded-lg border border-red-200 bg-red-50 p-4">
           <h2 class="font-semibold text-red-800">
@@ -21,39 +21,33 @@
         </div>
       <% end %>
 
-      <div>
-        <div class="space-y-3">
-  <%= f.label :avatar, class: "block text-sm font-medium text-gray-700" %>
+      <div class="space-y-3">
+        <%= f.label :avatar, class: "block text-sm font-medium text-gray-700" %>
 
-  <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4">
+          <% if @user.avatar.attached? %>
+            <%= image_tag @user.avatar,
+                class: "h-20 w-20 rounded-full border object-cover" %>
+          <% else %>
+            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-500">
+              avatar
+            </div>
+          <% end %>
 
-    <% if @user.avatar.attached? %>
-      <% if @user.avatar.attached? %>
-  <%= image_tag @user.avatar.variant(
-      resize_to_fill: [96, 96],
-      saver: { strip: true, quality: 80 }
-    ),
-    class: "mb-4 h-24 w-24 rounded-full border object-cover" %>
-<% end %>
-    <% else %>
-      <div class="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
-        avatar
+          <label class="cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-50">
+            Change avatar
+            <%= f.file_field :avatar,
+                accept: "image/*",
+                class: "hidden" %>
+          </label>
+        </div>
       </div>
-    <% end %>
 
-    <label class="cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-50">
-      Change avatar
-      <%= f.file_field :avatar,
-          accept: "image/*",
-          class: "hidden" %>
-    </label>
-
-  </div>
-</div>
+      <div>
         <%= f.label :username, class: "mb-1 block text-sm font-medium text-gray-700" %>
         <%= f.text_field :username,
-          class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
-          placeholder: "omer" %>
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
+            placeholder: "omer" %>
         <p class="mt-1 text-xs text-gray-500">
           Letters, numbers, and underscores only.
         </p>
@@ -62,21 +56,21 @@
       <div>
         <%= f.label :display_name, class: "mb-1 block text-sm font-medium text-gray-700" %>
         <%= f.text_field :display_name,
-          class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
-          placeholder: "Omer Siddiqui" %>
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
+            placeholder: "Omer Siddiqui" %>
       </div>
 
       <div>
         <%= f.label :bio, class: "mb-1 block text-sm font-medium text-gray-700" %>
         <%= f.text_area :bio,
-          rows: 5,
-          class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
-          placeholder: "A few words about yourself..." %>
+            rows: 5,
+            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
+            placeholder: "A few words about yourself..." %>
       </div>
 
       <div>
         <%= f.submit "Save profile",
-          class: "inline-flex rounded-lg bg-gray-900 px-4 py-2 text-white hover:bg-gray-800" %>
+            class: "inline-flex rounded-lg bg-gray-900 px-4 py-2 text-white hover:bg-gray-800" %>
       </div>
     <% end %>
   </div>

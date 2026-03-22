@@ -2,7 +2,8 @@
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: %i[google_oauth2 github]
 
   validates :username,
             uniqueness: true,
@@ -15,10 +16,6 @@ class User < ApplicationRecord
 
   validates :display_name, length: { maximum: 50 }, allow_blank: true
   validates :bio, length: { maximum: 280 }, allow_blank: true
-
-  def name_for_display
-    display_name.presence || username.presence || email.split('@').first
-  end
 
   has_many :active_follows,
            class_name: 'Follow',
@@ -35,9 +32,33 @@ class User < ApplicationRecord
   has_many :following, through: :active_follows, source: :followed
   has_many :followers, through: :passive_follows, source: :follower
 
+  has_many :identities, dependent: :destroy
+
   has_one_attached :avatar
+
+  def name_for_display
+    display_name.presence || username.presence || email.split('@').first
+  end
 
   def following?(other_user)
     following.exists?(other_user.id)
+  end
+
+  def self.from_omniauth(auth)
+    identity = Identity.find_by(provider: auth.provider, uid: auth.uid)
+    return identity.user if identity
+
+    email = auth.info.email&.downcase
+    raise ArgumentError, "OAuth provider did not supply an email" if email.blank?
+
+    user = User.find_by(email: email)
+
+    user ||= User.create!(
+      email: email,
+      password: Devise.friendly_token[0, 20]
+    )
+
+    user.identities.create!(provider: auth.provider, uid: auth.uid)
+    user
   end
 end

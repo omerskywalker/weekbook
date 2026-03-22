@@ -6,6 +6,18 @@
 
   <div class="rounded-lg border bg-white p-6 shadow-sm">
 
+  <div class="mb-6 space-y-3">
+  <%= button_to "Continue with Google",
+      user_google_oauth2_omniauth_authorize_path,
+      method: :post,
+      class: "w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50" %>
+
+  <%= button_to "Continue with GitHub",
+      user_github_omniauth_authorize_path,
+      method: :post,
+      class: "w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50" %>
+</div>
+
     <%= form_for(resource,
         as: resource_name,
         url: session_path(resource_name)) do |f| %>

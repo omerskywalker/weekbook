@@ -59,6 +59,9 @@ gem 'bootsnap', require: false
 # Timezone for Windows
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
+gem "omniauth-google-oauth2"
+gem "omniauth-github"
+
 group :development, :test do
   # Debugging
   gem 'debug', platforms: %i[mri windows]

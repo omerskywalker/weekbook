@@ -45,20 +45,30 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    identity = Identity.find_by(provider: auth.provider, uid: auth.uid)
+    identity = find_identity(auth)
     return identity.user if identity
 
+    user = find_or_create_user_from_auth(auth)
+    user.identities.create!(provider: auth.provider, uid: auth.uid)
+
+    user
+  end
+
+  def self.find_identity(auth)
+    Identity.find_by(provider: auth.provider, uid: auth.uid)
+  end
+
+  def self.find_or_create_user_from_auth(auth)
     email = auth.info.email&.downcase
-    raise ArgumentError, "OAuth provider did not supply an email" if email.blank?
+    raise ArgumentError, 'OAuth provider did not supply an email' if email.blank?
 
-    user = User.find_by(email: email)
+    User.find_by(email: email) || create_user_from_email(email)
+  end
 
-    user ||= User.create!(
+  def self.create_user_from_email(email)
+    User.create!(
       email: email,
       password: Devise.friendly_token[0, 20]
     )
-
-    user.identities.create!(provider: auth.provider, uid: auth.uid)
-    user
   end
 end

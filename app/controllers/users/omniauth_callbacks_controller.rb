@@ -3,21 +3,21 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def google_oauth2
-      handle_auth("Google")
+      handle_auth('Google')
     end
 
     def github
-      handle_auth("GitHub")
+      handle_auth('GitHub')
     end
 
     def failure
-      redirect_to new_user_session_path, alert: "OAuth sign in failed."
+      redirect_to new_user_session_path, alert: 'OAuth sign in failed.'
     end
 
     private
 
     def handle_auth(provider_name)
-      auth = request.env["omniauth.auth"]
+      auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
 
       sign_in_and_redirect user, event: :authentication

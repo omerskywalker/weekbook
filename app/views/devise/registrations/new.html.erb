@@ -6,16 +6,31 @@
 
   <div class="rounded-lg border bg-white p-6 shadow-sm">
 
-  <div class="mb-6 space-y-3">
-  <%= button_to "Continue with Google",
-      user_google_oauth2_omniauth_authorize_path,
+<div class="mb-6 space-y-3">
+  <%= button_to user_google_oauth2_omniauth_authorize_path,
       method: :post,
-      class: "w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50" %>
+      class: "flex w-full items-center justify-center gap-3 rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-zinc-800 cursor-pointer hover:-translate-y-0.5 active:translate-y-0" do %>
+    <span aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-white">
+        <path d="M21.8 12.23c0-.68-.06-1.33-.17-1.96H12v3.71h5.5a4.7 4.7 0 0 1-2.04 3.08v2.56h3.3c1.94-1.79 3.04-4.42 3.04-7.39Z"/>
+        <path d="M12 22c2.75 0 5.06-.91 6.75-2.47l-3.3-2.56c-.91.61-2.08.97-3.45.97-2.65 0-4.89-1.79-5.69-4.2H2.9v2.64A10 10 0 0 0 12 22Z"/>
+        <path d="M6.31 13.74A5.98 5.98 0 0 1 6 12c0-.6.11-1.18.31-1.74V7.62H2.9A10 10 0 0 0 2 12c0 1.61.38 3.13 1.05 4.38l3.26-2.64Z"/>
+        <path d="M12 5.98c1.49 0 2.82.51 3.87 1.5l2.9-2.9C17.05 2.98 14.75 2 12 2A10 10 0 0 0 2.9 7.62l3.41 2.64c.8-2.41 3.04-4.28 5.69-4.28Z"/>
+      </svg>
+    </span>
+    <span>Continue with Google</span>
+  <% end %>
 
-  <%= button_to "Continue with GitHub",
-      user_github_omniauth_authorize_path,
+  <%= button_to user_github_omniauth_authorize_path,
       method: :post,
-      class: "w-full rounded-md border border-zinc-300 px-4 py-2 text-sm hover:bg-zinc-50" %>
+      class: "flex w-full items-center justify-center gap-3 rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-zinc-800 cursor-pointer hover:-translate-y-0.5 active:translate-y-0" do %>
+    <span aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-white">
+        <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.41-4.04-1.41-.55-1.38-1.33-1.74-1.33-1.74-1.09-.74.08-.72.08-.72 1.2.09 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.48-1.33-5.48-5.92 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.67 1.66.25 2.88.13 3.18.77.84 1.23 1.91 1.23 3.22 0 4.6-2.82 5.61-5.5 5.91.43.38.82 1.1.82 2.22v3.29c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"/>
+      </svg>
+    </span>
+    <span>Continue with GitHub</span>
+  <% end %>
 </div>
 
     <%= form_for(resource,

@@ -17,7 +17,7 @@ class ProfilesController < ApplicationController
     if @user.update(profile_params)
       redirect_to user_profile_path(@user.username), notice: 'Profile updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -26,6 +26,4 @@ class ProfilesController < ApplicationController
   def profile_params
     params.require(:user).permit(:username, :display_name, :bio, :avatar)
   end
-
-  
 end

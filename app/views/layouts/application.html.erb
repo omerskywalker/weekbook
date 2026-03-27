@@ -27,6 +27,9 @@
 
         <div class="flex items-center gap-5 text-sm">
           <% if user_signed_in? %>
+            <%= link_to "Digests", weekly_digests_path,
+                class: "text-ink-300 transition-colors duration-200 hover:text-white" %>
+
             <% if current_user.username.present? %>
               <%= link_to "Profile", user_profile_path(current_user.username),
                   class: "text-ink-300 transition-colors duration-200 hover:text-white" %>

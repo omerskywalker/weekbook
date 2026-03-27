@@ -11,7 +11,8 @@ module Users
     end
 
     def failure
-      redirect_to new_user_session_path, alert: 'OAuth sign in failed.'
+      error = params[:message] || 'unknown error'
+      redirect_to new_user_session_path, alert: "OAuth failed: #{error}"
     end
 
     private

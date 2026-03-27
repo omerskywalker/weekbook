@@ -61,6 +61,7 @@ gem 'tzinfo-data', platforms: %i[windows jruby]
 
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
 
 group :development, :test do
   # Debugging

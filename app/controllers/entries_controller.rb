@@ -9,6 +9,13 @@ class EntriesController < ApplicationController
     @entries = current_user.entries.for_week(@week_start).recent
     @entry = Entry.new
     @prompt = PromptDispatch.for_current_week(current_user)
+    if @entries.any?
+      @current_digest = current_user.weekly_digests.find_or_create_by(
+        week_start_date: @week_start,
+        week_number: @week_start.cweek,
+        year: @week_start.cwyear
+      )
+    end
   end
 
   def new
@@ -33,6 +40,7 @@ class EntriesController < ApplicationController
   end
 
   def destroy
+    authorize @entry
     @entry.destroy
     respond_to do |format|
       format.html { redirect_to entries_path, notice: 'Entry removed.' }

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     member do
       patch :publish
       patch :unpublish
+      post :generate
     end
   end
 

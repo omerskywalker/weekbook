@@ -1,77 +1,86 @@
-<div class="mx-auto max-w-2xl px-4 py-10">
-  <div class="rounded-2xl border bg-white p-6 shadow-sm">
-    <h1 class="text-2xl font-bold text-gray-900">Edit profile</h1>
-    <p class="mt-2 text-sm text-gray-600">
-      Set up your public identity for Weekbook.
-    </p>
+<div class="mx-auto max-w-lg animate-slide-up">
+
+  <div class="mb-6">
+    <h1 class="font-display text-3xl font-light text-ink-900">Edit profile</h1>
+    <p class="mt-1 text-sm text-ink-500">Your public identity on Weekbook.</p>
+  </div>
+
+  <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
 
     <%= form_with model: @user, url: profile_path, method: :patch,
-                  class: "mt-6 space-y-5",
+                  class: "space-y-5",
                   html: { multipart: true } do |f| %>
+
       <% if @user.errors.any? %>
-        <div class="rounded-lg border border-red-200 bg-red-50 p-4">
-          <h2 class="font-semibold text-red-800">
-            Please fix the following:
-          </h2>
-          <ul class="mt-2 list-disc pl-5 text-sm text-red-700">
+        <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+          <p class="text-sm font-medium text-red-700">Please fix the following:</p>
+          <ul class="mt-1 space-y-0.5 text-sm text-red-600">
             <% @user.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
+              <li>· <%= message %></li>
             <% end %>
           </ul>
         </div>
       <% end %>
 
-      <div class="space-y-3">
-        <%= f.label :avatar, class: "block text-sm font-medium text-gray-700" %>
-
+      <%# Avatar %>
+      <div>
+        <%= f.label :avatar, "Photo", class: "mb-2 block text-sm font-medium text-ink-700" %>
         <div class="flex items-center gap-4">
           <% if @user.avatar.attached? %>
             <%= image_tag @user.avatar,
-                class: "h-20 w-20 rounded-full border object-cover" %>
+                class: "h-16 w-16 rounded-full border-2 border-cream-300 object-cover" %>
           <% else %>
-            <div class="flex h-20 w-20 items-center justify-center rounded-full bg-gray-200 text-sm text-gray-500">
-              avatar
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-cream-200 font-display text-xl font-light text-ink-400">
+              <%= @user.name_for_display[0]&.upcase %>
             </div>
           <% end %>
 
-          <label class="cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-gray-50">
-            Change avatar
-            <%= f.file_field :avatar,
-                accept: "image/*",
-                class: "hidden" %>
+          <label class="cursor-pointer rounded-md border border-cream-400 bg-cream-50 px-4 py-2 text-sm font-medium text-ink-700 transition-all hover:bg-cream-200">
+            Change photo
+            <%= f.file_field :avatar, accept: "image/*", class: "hidden" %>
           </label>
         </div>
       </div>
 
+      <%# Username %>
       <div>
-        <%= f.label :username, class: "mb-1 block text-sm font-medium text-gray-700" %>
-        <%= f.text_field :username,
-            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
-            placeholder: "omer" %>
-        <p class="mt-1 text-xs text-gray-500">
-          Letters, numbers, and underscores only.
-        </p>
+        <%= f.label :username, class: "mb-1 block text-sm font-medium text-ink-700" %>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-3 flex items-center text-ink-400 text-sm">@</span>
+          <%= f.text_field :username,
+              class: "w-full rounded-lg border border-cream-400 bg-white pl-7 pr-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber",
+              placeholder: "yourname" %>
+        </div>
+        <p class="mt-1 text-xs text-ink-400">Letters, numbers, and underscores only.</p>
       </div>
 
+      <%# Display name %>
       <div>
-        <%= f.label :display_name, class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <%= f.label :display_name, "Display name", class: "mb-1 block text-sm font-medium text-ink-700" %>
         <%= f.text_field :display_name,
-            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
-            placeholder: "Omer Siddiqui" %>
+            class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber",
+            placeholder: "Your name" %>
       </div>
 
+      <%# Bio %>
       <div>
-        <%= f.label :bio, class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <%= f.label :bio, class: "mb-1 block text-sm font-medium text-ink-700" %>
         <%= f.text_area :bio,
-            rows: 5,
-            class: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-gray-900 focus:outline-none",
+            rows: 4,
+            class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber resize-none",
             placeholder: "A few words about yourself..." %>
+        <p class="mt-1 text-xs text-ink-400">Max 280 characters.</p>
       </div>
 
-      <div>
+      <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
         <%= f.submit "Save profile",
-            class: "inline-flex rounded-lg bg-gray-900 px-4 py-2 text-white hover:bg-gray-800" %>
+            class: "cursor-pointer rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink-700 hover:-translate-y-px active:translate-y-0" %>
+
+        <%= link_to "Cancel",
+            current_user.username.present? ? user_profile_path(current_user.username) : root_path,
+            class: "text-sm text-ink-500 transition-colors hover:text-ink-800" %>
       </div>
+
     <% end %>
   </div>
 </div>

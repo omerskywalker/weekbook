@@ -1,42 +1,82 @@
 <% if user_signed_in? %>
-  <section class="space-y-4">
-    <h1 class="text-3xl font-semibold tracking-tight">Welcome back</h1>
-    <p class="text-zinc-600">
-      Your weekly recaps and private entries will live here soon.
-    </p>
 
-    <% if current_user.username.present? %>
-      <%= link_to "View profile", user_profile_path(current_user.username), class: "inline-block rounded-md bg-black px-4 py-2 text-sm text-white" %>
-    <% else %>
-      <%= link_to "Complete your profile", edit_profile_path, class: "inline-block rounded-md bg-black px-4 py-2 text-sm text-white" %>
-    <% end %>
-  </section>
-<% else %>
-
-  <section class="max-w-xl space-y-5">
-
-    <h1 class="text-4xl font-semibold tracking-tight">
-      Weekbook
-    </h1>
-
-    <p class="text-lg text-zinc-600">
-      Capture your week through small reflections.
-      Weekbook turns quick prompts throughout the week
-      into a meaningful weekly recap.
-    </p>
-
-    <div class="flex gap-3 pt-3">
-
-      <%= link_to "Create account",
-          new_user_registration_path,
-          class: "rounded-md bg-black px-4 py-2 text-white text-sm" %>
-
-      <%= link_to "Sign in",
-          new_user_session_path,
-          class: "rounded-md border border-zinc-300 px-4 py-2 text-sm" %>
-
+  <section class="space-y-8 animate-slide-up">
+    <div class="space-y-1">
+      <p class="text-sm font-medium text-amber">
+        Week <%= Date.today.cweek %> · <%= Date.today.beginning_of_week(:monday).strftime("%b %-d") %> – <%= Date.today.end_of_week(:monday).strftime("%b %-d") %>
+      </p>
+      <h1 class="font-display text-4xl font-light text-ink-900">
+        Welcome back<% if current_user.name_for_display.present? %>, <%= current_user.name_for_display.split.first %><% end %>.
+      </h1>
     </div>
 
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
+        <p class="mb-1 text-xs font-medium uppercase tracking-widest text-ink-400">This week</p>
+        <p class="mb-4 text-ink-600">Your entries and weekly recap will live here.</p>
+        <% if current_user.username.present? %>
+          <%= link_to "View profile →", user_profile_path(current_user.username),
+              class: "text-sm font-medium text-amber transition-colors hover:text-amber-dark" %>
+        <% else %>
+          <%= link_to "Complete your profile →", edit_profile_path,
+              class: "text-sm font-medium text-amber transition-colors hover:text-amber-dark" %>
+        <% end %>
+      </div>
+
+      <div class="rounded-xl border border-dashed border-cream-400 bg-cream-100 p-6">
+        <p class="mb-1 text-xs font-medium uppercase tracking-widest text-ink-400">Coming soon</p>
+        <p class="text-ink-500">Prompts, entries, and AI-generated weekly digests.</p>
+      </div>
+    </div>
   </section>
+
+<% else %>
+
+  <div class="flex min-h-[70vh] flex-col justify-center">
+    <section class="max-w-2xl space-y-8 animate-slide-up">
+
+      <div class="space-y-4">
+        <h1 class="font-display text-5xl font-light leading-tight tracking-tight text-ink-900 sm:text-6xl">
+          Your week,<br>
+          <em class="font-light not-italic text-amber">told as story.</em>
+        </h1>
+        <p class="max-w-lg text-lg font-light leading-relaxed text-ink-500">
+          Small moments, captured throughout the week.
+          Synthesized into a narrative worth keeping.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <%= link_to "Get started",
+            new_user_registration_path,
+            class: "rounded-md bg-amber px-5 py-2.5 font-medium text-ink-900 transition-all duration-200 hover:bg-amber-light hover:-translate-y-px active:translate-y-0 shadow-warm" %>
+
+        <%= link_to "Sign in",
+            new_user_session_path,
+            class: "rounded-md border border-cream-400 bg-white px-5 py-2.5 font-medium text-ink-700 transition-all duration-200 hover:border-cream-400 hover:bg-cream-100" %>
+      </div>
+
+    </section>
+
+    <section class="mt-16 grid gap-4 sm:grid-cols-3 animate-fade-in">
+      <div class="rounded-xl border border-cream-300 bg-white p-5 shadow-warm">
+        <p class="mb-2 font-display text-2xl font-light text-ink-900">01</p>
+        <p class="mb-1 text-sm font-medium text-ink-800">Low-friction capture</p>
+        <p class="text-sm text-ink-500">Answer short prompts. Reply to a text. Takes ten seconds.</p>
+      </div>
+
+      <div class="rounded-xl border border-cream-300 bg-white p-5 shadow-warm">
+        <p class="mb-2 font-display text-2xl font-light text-amber">02</p>
+        <p class="mb-1 text-sm font-medium text-ink-800">Weekly narrative</p>
+        <p class="text-sm text-ink-500">Your entries become a cohesive story of your week.</p>
+      </div>
+
+      <div class="rounded-xl border border-cream-300 bg-white p-5 shadow-warm">
+        <p class="mb-2 font-display text-2xl font-light text-ink-900">03</p>
+        <p class="mb-1 text-sm font-medium text-ink-800">Share lightly</p>
+        <p class="text-sm text-ink-500">Publish to followers, or keep it private. You choose.</p>
+      </div>
+    </section>
+  </div>
 
 <% end %>

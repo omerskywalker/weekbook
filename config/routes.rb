@@ -20,4 +20,10 @@ Rails.application.routes.draw do
   end
 
   resources :entries, only: %i[index new create destroy]
+
+  resources :prompt_dispatches, only: [] do
+    member do
+      patch :skip
+    end
+  end
 end

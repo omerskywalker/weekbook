@@ -8,11 +8,13 @@ class EntriesController < ApplicationController
     @week_start = Date.current.beginning_of_week(:monday)
     @entries = current_user.entries.for_week(@week_start).recent
     @entry = Entry.new
+    @prompt = PromptDispatch.for_current_week(current_user)
   end
 
   def new
     @entry = Entry.new
     @week_start = Date.current.beginning_of_week(:monday)
+    @prompt = PromptDispatch.for_current_week(current_user)
   end
 
   def create

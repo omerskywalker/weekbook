@@ -5,6 +5,32 @@
 
 ---
 
+## Last Session — What Was Done
+
+> **Updated after every coding session. Read this first to understand current state.**
+
+**2026-03-27 — Mobile Responsiveness (PR #13, branch `feat/mobile`)**
+
+The app looked good on desktop but broke on mobile. Here's what we fixed:
+
+**Nav (the main piece):** Built a Stimulus controller (`mobile_menu_controller.js`) that drives a hamburger menu. The desktop nav links are now wrapped in `hidden md:flex` so they only appear at medium+ breakpoints. Below `md`, a hamburger icon appears instead. Tapping it toggles a slide-down dropdown, and the icon swaps between open/close states. Every link in the dropdown has a `click->mobile-menu#close` action so the menu collapses when you navigate.
+
+**Card padding:** Most cards had a flat `p-6` or `p-8` — tight on a 375px screen. Changed these to `p-4 sm:p-6` and `p-4 sm:p-8` across digest show/new/edit, profile edit, and the digest form wrapper. Small change, big difference in feel.
+
+**Auth pages:** The sign in/sign up cards were centered but had no horizontal buffer — they could press right up to the screen edge on small viewports. Added `px-4` to the outer wrapper so there's always a margin.
+
+**Header rows:** The digest index page and feed page both had a header with the title on the left and a CTA button on the right (`flex justify-between`). On narrow screens this would overflow. Added `flex-wrap gap-y-3` so the button drops to a new line cleanly instead.
+
+**Entry write:** The full-screen write view had `pt-16` top padding — too much on mobile, cuts into usable space. Changed to `pt-8 sm:pt-16`.
+
+**Also included in this commit:** `CLAUDE.md` (this file) — added as a tracked file so it travels with the repo and is auto-loaded by Claude Code every session.
+
+**Pending actions for you:**
+- Merge PR #13 (`feat/mobile`) after merging PRs 10, 11, 12 in order (entries → prompts → feed → mobile)
+- After merging feat/prompts (PR #11), run `bundle exec rails db:seed` on Render to load the 22 prompt templates
+
+---
+
 ## Product Vision
 
 Weekbook is a **behavioral journaling product**, not a social media app.
@@ -270,9 +296,10 @@ TWILIO_PHONE_NUMBER=...    # Phase 7
 | `feat/entries` | PR10 | Entry model, focused writing UI, char-count controller, Turbo Streams | **Merge first** |
 | `feat/prompts` | PR11 | PromptTemplate + PromptDispatch, 22 seeds, prompt banner | **Merge second** |
 | `feat/feed` | PR12 | Feed of published digests, follow suggestions, pagination | **Merge third** |
+| `feat/mobile` | PR13 | Mobile nav (hamburger), responsive card padding, auth page fix | **Merge fourth** |
 
-> **Important:** These three branches are chained (each cut from the previous). Merge in order.
-> After merging, run `rails db:seed` on Render to load prompt templates.
+> **Important:** These branches are chained (each cut from the previous). Merge in order.
+> After merging feat/prompts (PR11), run `rails db:seed` on Render to load prompt templates.
 
 ### Not yet started
 | Phase | Feature | Blocker/Notes |

@@ -5,7 +5,7 @@
     <p class="mt-1 text-sm text-ink-500"><%= Date.current.beginning_of_week(:monday).strftime('%b %-d') %> – <%= Date.current.end_of_week(:monday).strftime('%b %-d, %Y') %></p>
   </div>
 
-  <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
+  <div class="rounded-xl border border-cream-300 bg-white p-4 sm:p-6 shadow-warm">
     <%= render 'form', digest: @digest %>
   </div>
 </div>

@@ -44,6 +44,9 @@ gem 'redis', '~> 5.0'
 # File uploads / image variants
 gem 'image_processing', '~> 1.2'
 
+# AWS S3 for Active Storage
+gem 'aws-sdk-s3', require: false
+
 # SMS integration
 gem 'twilio-ruby'
 
@@ -70,8 +73,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
 
-  # AWS S3 for Active Storage
-  gem 'aws-sdk-s3', require: false
 end
 
 group :development do

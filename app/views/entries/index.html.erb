@@ -42,11 +42,20 @@
     <% end %>
   </div>
 
-  <% if current_user.weekly_digests.where(week_start_date: @week_start).empty? %>
-    <div class="mt-10 rounded-xl border border-cream-200 bg-cream-50 px-6 py-5 text-center">
-      <p class="text-sm text-ink-500">Ready to wrap up the week?</p>
-      <%= link_to "Create this week's digest →", new_weekly_digest_path,
-          class: "mt-2 inline-block text-sm font-medium text-amber hover:text-amber-dark transition-colors" %>
+  <% if @current_digest&.persisted? %>
+    <div class="mt-10 rounded-xl border border-amber/30 bg-amber/5 px-6 py-5">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-ink-700">
+            <%= pluralize(@entries.size, "entry") %> this week — ready to reflect?
+          </p>
+          <p class="mt-0.5 text-xs text-ink-400">AI will weave your entries into a short narrative digest.</p>
+        </div>
+        <%= button_to "Generate this week's digest →",
+            generate_weekly_digest_path(@current_digest),
+            method: :post,
+            class: "shrink-0 rounded-lg bg-amber px-4 py-2 text-xs font-medium text-ink-900 transition-all duration-150 hover:bg-amber-light" %>
+      </div>
     </div>
   <% end %>
 

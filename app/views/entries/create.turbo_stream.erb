@@ -1,0 +1,18 @@
+<%= turbo_stream.prepend "entries-list", partial: "entry", locals: { entry: @entry } %>
+<%= turbo_stream.replace "entry_new_form" do %>
+  <%= form_with model: Entry.new, url: entries_path, data: { controller: "char-count", turbo_frame: "_top" } do |f| %>
+    <div class="relative">
+      <%= f.text_area :content,
+          rows: 4,
+          placeholder: "What happened today? What are you thinking about?",
+          data: { char_count_target: "input", action: "input->char-count#update keydown->char-count#submitOnCmd" },
+          class: "w-full resize-none rounded-lg border border-cream-400 bg-cream-50 px-4 py-3 text-sm text-ink-800 placeholder-ink-400 transition-colors focus:border-amber focus:bg-white focus:outline-none focus:ring-1 focus:ring-amber" %>
+      <div class="mt-2 flex items-center justify-between">
+        <p class="text-xs text-ink-400" data-char-count-target="counter">0 / 500</p>
+        <%= f.submit "Save entry",
+            data: { char_count_target: "submit" },
+            class: "cursor-pointer rounded-lg bg-amber px-4 py-2 text-xs font-medium text-ink-900 transition-all duration-150 hover:bg-amber-light disabled:cursor-not-allowed disabled:opacity-40" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

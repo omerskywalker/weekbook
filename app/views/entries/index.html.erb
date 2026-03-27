@@ -1,0 +1,51 @@
+<div class="mx-auto max-w-2xl px-4 py-10">
+
+  <div class="mb-8">
+    <p class="text-xs font-medium uppercase tracking-widest text-amber">Week <%= @week_start.cweek %></p>
+    <h1 class="font-display text-3xl font-light text-ink-900">This week's entries</h1>
+    <p class="mt-1 text-sm text-ink-500">
+      <%= @week_start.strftime('%b %-d') %> – <%= (@week_start + 6.days).strftime('%b %-d') %>
+    </p>
+  </div>
+
+  <%# Quick-add form %>
+  <div class="mb-8 rounded-xl border border-cream-300 bg-white p-5 shadow-warm">
+    <%= form_with model: @entry, url: entries_path, data: { controller: "char-count", turbo_frame: "_top" } do |f| %>
+      <div class="relative">
+        <%= f.text_area :content,
+            rows: 4,
+            placeholder: "What happened today? What are you thinking about?",
+            data: { char_count_target: "input", action: "input->char-count#update keydown->char-count#submitOnCmd" },
+            class: "w-full resize-none rounded-lg border border-cream-400 bg-cream-50 px-4 py-3 text-sm text-ink-800 placeholder-ink-400 transition-colors focus:border-amber focus:bg-white focus:outline-none focus:ring-1 focus:ring-amber" %>\
+        <div class="mt-2 flex items-center justify-between">
+          <p class="text-xs text-ink-400" data-char-count-target="counter">0 / 500</p>
+          <%= f.submit "Save entry",
+              data: { char_count_target: "submit" },
+              class: "cursor-pointer rounded-lg bg-amber px-4 py-2 text-xs font-medium text-ink-900 transition-all duration-150 hover:bg-amber-light disabled:cursor-not-allowed disabled:opacity-40" %>
+        </div>
+      </div>
+    <% end %>
+    <p class="mt-2 text-xs text-ink-400">Tip: <kbd class="rounded border border-cream-300 bg-cream-100 px-1 py-0.5 font-mono text-xs">⌘ Enter</kbd> to save</p>
+  </div>
+
+  <%# Entry list %>
+  <div id="entries-list" class="space-y-3">
+    <% if @entries.empty? %>
+      <div class="rounded-xl border border-cream-200 bg-cream-50 px-6 py-10 text-center">
+        <p class="text-sm text-ink-400">No entries yet this week.</p>
+        <p class="mt-1 text-xs text-ink-300">Write something above to get started.</p>
+      </div>
+    <% else %>
+      <%= render @entries %>
+    <% end %>
+  </div>
+
+  <% if current_user.weekly_digests.where(week_start_date: @week_start).empty? %>
+    <div class="mt-10 rounded-xl border border-cream-200 bg-cream-50 px-6 py-5 text-center">
+      <p class="text-sm text-ink-500">Ready to wrap up the week?</p>
+      <%= link_to "Create this week's digest →", new_weekly_digest_path,
+          class: "mt-2 inline-block text-sm font-medium text-amber hover:text-amber-dark transition-colors" %>
+    </div>
+  <% end %>
+
+</div>

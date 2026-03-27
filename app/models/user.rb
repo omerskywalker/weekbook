@@ -34,6 +34,7 @@ class User < ApplicationRecord
 
   has_many :identities, dependent: :destroy
   has_many :weekly_digests, dependent: :destroy
+  has_many :entries, dependent: :destroy
 
   has_one_attached :avatar
 

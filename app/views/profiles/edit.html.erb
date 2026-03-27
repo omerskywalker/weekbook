@@ -23,21 +23,25 @@
       <% end %>
 
       <%# Avatar %>
-      <div>
+      <div data-controller="avatar-preview">
         <%= f.label :avatar, "Photo", class: "mb-2 block text-sm font-medium text-ink-700" %>
         <div class="flex items-center gap-4">
           <% if @user.avatar.attached? %>
             <%= image_tag @user.avatar,
+                data: { avatar_preview_target: "preview" },
                 class: "h-16 w-16 rounded-full border-2 border-cream-300 object-cover" %>
           <% else %>
-            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-cream-200 font-display text-xl font-light text-ink-400">
+            <img data-avatar-preview-target="preview"
+                 class="h-16 w-16 rounded-full border-2 border-cream-300 object-cover hidden" src="" alt="Preview" />
+            <div id="avatar-initials" class="flex h-16 w-16 items-center justify-center rounded-full bg-cream-200 font-display text-xl font-light text-ink-400">
               <%= @user.name_for_display[0]&.upcase %>
             </div>
           <% end %>
 
           <label class="cursor-pointer rounded-md border border-cream-400 bg-cream-50 px-4 py-2 text-sm font-medium text-ink-700 transition-all hover:bg-cream-200">
             Change photo
-            <%= f.file_field :avatar, accept: "image/*", class: "hidden" %>
+            <%= f.file_field :avatar, accept: "image/*", class: "hidden",
+                data: { action: "change->avatar-preview#show" } %>
           </label>
         </div>
       </div>

@@ -18,4 +18,6 @@ Rails.application.routes.draw do
       patch :unpublish
     end
   end
+
+  resources :entries, only: %i[index new create destroy]
 end

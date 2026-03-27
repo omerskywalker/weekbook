@@ -1,0 +1,28 @@
+<div class="flex items-center justify-between rounded-xl border border-cream-200 bg-white px-4 py-3.5 shadow-warm">
+  <div class="flex items-center gap-3">
+    <% if suggested_user.avatar.attached? %>
+      <%= image_tag suggested_user.avatar.variant(resize_to_fill: [36, 36]),
+          class: "h-9 w-9 rounded-full object-cover",
+          alt: suggested_user.name_for_display %>
+    <% else %>
+      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink-800 text-sm font-medium text-white">
+        <%= suggested_user.name_for_display.first.upcase %>
+      </div>
+    <% end %>
+    <div>
+      <% if suggested_user.username.present? %>
+        <%= link_to suggested_user.name_for_display, user_profile_path(suggested_user.username),
+            class: "text-sm font-medium text-ink-800 hover:text-amber transition-colors" %>
+      <% else %>
+        <span class="text-sm font-medium text-ink-800"><%= suggested_user.name_for_display %></span>
+      <% end %>
+      <p class="text-xs text-ink-400"><%= suggested_user.digest_count %> <%= 'digest'.pluralize(suggested_user.digest_count) %> published</p>
+    </div>
+  </div>
+  <% if suggested_user.username.present? %>
+    <%= button_to follow_user_path(suggested_user.username), method: :post,
+        class: "cursor-pointer rounded-md border border-cream-300 bg-white px-3 py-1.5 text-xs font-medium text-ink-700 transition-all hover:bg-cream-100" do %>
+      Follow
+    <% end %>
+  <% end %>
+</div>

@@ -33,6 +33,7 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_follows, source: :follower
 
   has_many :identities, dependent: :destroy
+  has_many :weekly_digests, dependent: :destroy
 
   has_one_attached :avatar
 

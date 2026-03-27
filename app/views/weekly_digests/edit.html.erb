@@ -1,0 +1,11 @@
+<div class="mx-auto max-w-2xl animate-slide-up">
+  <div class="mb-6">
+    <p class="text-sm font-medium text-amber">Week <%= @digest.week_number %> · <%= @digest.year %></p>
+    <h1 class="font-display text-3xl font-light text-ink-900">Edit digest</h1>
+    <p class="mt-1 text-sm text-ink-500"><%= @digest.week_range_label %></p>
+  </div>
+
+  <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
+    <%= render 'form', digest: @digest %>
+  </div>
+</div>

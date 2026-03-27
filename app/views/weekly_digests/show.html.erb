@@ -1,0 +1,65 @@
+<div class="mx-auto max-w-2xl animate-slide-up">
+
+  <%# Week hero %>
+  <div class="mb-8 space-y-1">
+    <p class="text-sm font-medium text-amber">
+      Week <%= @digest.week_number %> · <%= @digest.year %>
+    </p>
+    <h1 class="font-display text-4xl font-light text-ink-900">
+      <%= @digest.week_range_label %>
+    </h1>
+    <div class="flex items-center gap-3 pt-1">
+      <% if @digest.user.avatar.attached? %>
+        <%= image_tag @digest.user.avatar,
+            class: "h-6 w-6 rounded-full border border-cream-300 object-cover" %>
+      <% end %>
+      <%= link_to @digest.user.name_for_display,
+          user_profile_path(@digest.user.username),
+          class: "text-sm text-ink-500 transition-colors hover:text-ink-800" %>
+      <span class="text-ink-300">·</span>
+      <% if @digest.published? %>
+        <span class="text-xs font-medium text-emerald-600">Published</span>
+      <% else %>
+        <span class="text-xs font-medium text-ink-400">Draft</span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Content %>
+  <% if @digest.content.present? %>
+    <div class="prose prose-stone max-w-none rounded-xl border border-cream-300 bg-white p-8 shadow-warm">
+      <div class="font-sans text-base leading-relaxed text-ink-700 whitespace-pre-wrap"><%= @digest.content %></div>
+    </div>
+  <% else %>
+    <div class="rounded-xl border border-dashed border-cream-400 bg-cream-100 px-8 py-12 text-center">
+      <p class="font-display text-3xl font-light text-ink-300">—</p>
+      <p class="mt-2 text-sm text-ink-400">No content written yet.</p>
+    </div>
+  <% end %>
+
+  <%# Owner actions %>
+  <% if user_signed_in? && current_user == @digest.user %>
+    <div class="mt-6 flex items-center gap-3 border-t border-cream-300 pt-5">
+      <%= link_to "Edit",
+          edit_weekly_digest_path(@digest),
+          class: "rounded-md border border-cream-400 bg-white px-4 py-2 text-sm font-medium text-ink-700 transition-all hover:bg-cream-100" %>
+
+      <% if @digest.published? %>
+        <%= button_to "Unpublish",
+            unpublish_weekly_digest_path(@digest),
+            method: :patch,
+            class: "rounded-md border border-cream-400 bg-white px-4 py-2 text-sm font-medium text-ink-600 transition-all hover:bg-cream-100" %>
+      <% else %>
+        <%= button_to "Publish",
+            publish_weekly_digest_path(@digest),
+            method: :patch,
+            class: "rounded-md bg-amber px-4 py-2 text-sm font-medium text-ink-900 transition-all hover:bg-amber-light" %>
+      <% end %>
+
+      <%= link_to "← All digests",
+          weekly_digests_path,
+          class: "ml-auto text-sm text-ink-400 transition-colors hover:text-ink-700" %>
+    </div>
+  <% end %>
+
+</div>

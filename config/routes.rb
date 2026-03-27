@@ -11,4 +11,11 @@ Rails.application.routes.draw do
   get '/u/:username', to: 'profiles#show', as: :user_profile
   post '/u/:username/follow', to: 'follows#create', as: :follow_user
   delete '/u/:username/follow', to: 'follows#destroy', as: :unfollow_user
+
+  resources :weekly_digests, only: %i[index show new create edit update] do
+    member do
+      patch :publish
+      patch :unpublish
+    end
+  end
 end

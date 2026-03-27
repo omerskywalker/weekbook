@@ -1,0 +1,42 @@
+<%= form_with model: digest, class: "space-y-5" do |f| %>
+
+  <% if digest.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+      <p class="text-sm font-medium text-red-700">Please fix the following:</p>
+      <ul class="mt-1 space-y-0.5 text-sm text-red-600">
+        <% digest.errors.full_messages.each do |msg| %>
+          <li>· <%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :summary_line, "One-line summary", class: "mb-1 block text-sm font-medium text-ink-700" %>
+    <%= f.text_field :summary_line,
+        class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber",
+        placeholder: "A quick description of your week..." %>
+    <p class="mt-1 text-xs text-ink-400">Shown on your profile and in the feed. Max 160 chars.</p>
+  </div>
+
+  <div>
+    <%= f.label :content, "Your story", class: "mb-1 block text-sm font-medium text-ink-700" %>
+    <%= f.text_area :content,
+        rows: 14,
+        class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-3 font-sans text-sm leading-relaxed text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber resize-none",
+        placeholder: "Write about your week here. This will be replaced by AI-generated content once that feature ships." %>
+    <p class="mt-1 text-xs text-ink-400">Your narrative for the week. Write freely.</p>
+  </div>
+
+  <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
+    <%= f.submit digest.persisted? ? "Save draft" : "Create digest",
+        class: "cursor-pointer rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink-700 hover:-translate-y-px active:translate-y-0" %>
+
+    <% if digest.persisted? %>
+      <%= link_to "View",
+          weekly_digest_path(digest),
+          class: "text-sm text-ink-500 transition-colors hover:text-ink-800" %>
+    <% end %>
+  </div>
+
+<% end %>

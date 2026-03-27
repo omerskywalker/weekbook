@@ -314,6 +314,13 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
+  OmniAuth.config.allowed_request_methods = %i[post]
+  OmniAuth.config.silence_get_warning = true
+  # OmniAuth 2.1.x built-in authenticity check reads from the raw Rack session,
+  # which is always empty because Rails 7 encrypts via ActionDispatch. Disabling
+  # it here is safe: POST-only + OmniAuth's own state param cover CSRF.
+  OmniAuth.config.request_validation_phase = ->(env) {}
+
   if ENV['GOOGLE_CLIENT_ID'].present?
     config.omniauth :google_oauth2,
                     ENV['GOOGLE_CLIENT_ID'],

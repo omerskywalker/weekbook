@@ -1,0 +1,58 @@
+<div class="animate-slide-up">
+
+  <div class="mb-6 flex items-end justify-between">
+    <div>
+      <h1 class="font-display text-3xl font-light text-ink-900">Your digests</h1>
+      <p class="mt-1 text-sm text-ink-500">Your weekly story archive.</p>
+    </div>
+    <%= link_to "New digest",
+        new_weekly_digest_path,
+        class: "rounded-md bg-amber px-4 py-2 text-sm font-medium text-ink-900 transition-all hover:bg-amber-light hover:-translate-y-px" %>
+  </div>
+
+  <% if @digests.any? %>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @digests.each do |digest| %>
+        <%= link_to weekly_digest_path(digest),
+            class: "group rounded-xl border border-cream-300 bg-white p-5 shadow-warm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-warm-lg" do %>
+
+          <div class="mb-3 flex items-start justify-between">
+            <p class="font-display text-3xl font-light text-amber leading-none">
+              <%= digest.week_number %>
+            </p>
+            <% if digest.published? %>
+              <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                Published
+              </span>
+            <% else %>
+              <span class="rounded-full bg-cream-200 px-2.5 py-0.5 text-xs font-medium text-ink-500">
+                Draft
+              </span>
+            <% end %>
+          </div>
+
+          <p class="mb-1 text-xs text-ink-400"><%= digest.week_range_label %></p>
+
+          <% if digest.summary_line.present? %>
+            <p class="line-clamp-2 text-sm text-ink-700"><%= digest.summary_line %></p>
+          <% elsif digest.content.present? %>
+            <p class="line-clamp-2 text-sm text-ink-400 italic"><%= digest.content.truncate(120) %></p>
+          <% else %>
+            <p class="text-sm text-ink-300 italic">No content yet.</p>
+          <% end %>
+
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="rounded-xl border border-dashed border-cream-400 bg-cream-100 px-8 py-16 text-center">
+      <p class="font-display text-4xl font-light text-ink-300">—</p>
+      <p class="mt-2 text-sm text-ink-500">No digests yet.</p>
+      <p class="mt-1 text-xs text-ink-400">Create one for this week to start your archive.</p>
+      <%= link_to "Create this week's digest",
+          new_weekly_digest_path,
+          class: "mt-4 inline-block text-sm font-medium text-amber transition-colors hover:text-amber-dark" %>
+    </div>
+  <% end %>
+
+</div>

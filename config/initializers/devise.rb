@@ -314,13 +314,17 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
-  config.omniauth :google_oauth2,
-                  ENV.fetch('GOOGLE_CLIENT_ID'),
-                  ENV.fetch('GOOGLE_CLIENT_SECRET'),
-                  {}
+  if ENV['GOOGLE_CLIENT_ID'].present?
+    config.omniauth :google_oauth2,
+                    ENV['GOOGLE_CLIENT_ID'],
+                    ENV['GOOGLE_CLIENT_SECRET'],
+                    {}
+  end
 
-  config.omniauth :github,
-                  ENV.fetch('GITHUB_CLIENT_ID'),
-                  ENV.fetch('GITHUB_CLIENT_SECRET'),
-                  scope: 'user:email'
+  if ENV['GITHUB_CLIENT_ID'].present?
+    config.omniauth :github,
+                    ENV['GITHUB_CLIENT_ID'],
+                    ENV['GITHUB_CLIENT_SECRET'],
+                    scope: 'user:email'
+  end
 end

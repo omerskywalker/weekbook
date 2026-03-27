@@ -1,72 +1,91 @@
-<div class="mx-auto max-w-md">
+<div class="flex min-h-[70vh] items-center justify-center">
+  <div class="w-full max-w-sm animate-slide-up">
 
-  <h1 class="text-2xl font-semibold mb-6">
-    Create your account
-  </h1>
-
-  <div class="rounded-lg border bg-white p-6 shadow-sm">
-
-<div class="mb-6 space-y-3">
-  <%= button_to user_google_oauth2_omniauth_authorize_path,
-      method: :post,
-      class: "flex w-full items-center justify-center gap-3 rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-zinc-800 cursor-pointer hover:-translate-y-0.5 active:translate-y-0" do %>
-    <span aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-white">
-        <path d="M21.8 12.23c0-.68-.06-1.33-.17-1.96H12v3.71h5.5a4.7 4.7 0 0 1-2.04 3.08v2.56h3.3c1.94-1.79 3.04-4.42 3.04-7.39Z"/>
-        <path d="M12 22c2.75 0 5.06-.91 6.75-2.47l-3.3-2.56c-.91.61-2.08.97-3.45.97-2.65 0-4.89-1.79-5.69-4.2H2.9v2.64A10 10 0 0 0 12 22Z"/>
-        <path d="M6.31 13.74A5.98 5.98 0 0 1 6 12c0-.6.11-1.18.31-1.74V7.62H2.9A10 10 0 0 0 2 12c0 1.61.38 3.13 1.05 4.38l3.26-2.64Z"/>
-        <path d="M12 5.98c1.49 0 2.82.51 3.87 1.5l2.9-2.9C17.05 2.98 14.75 2 12 2A10 10 0 0 0 2.9 7.62l3.41 2.64c.8-2.41 3.04-4.28 5.69-4.28Z"/>
-      </svg>
-    </span>
-    <span>Continue with Google</span>
-  <% end %>
-
-  <%= button_to user_github_omniauth_authorize_path,
-      method: :post,
-      class: "flex w-full items-center justify-center gap-3 rounded-md bg-black px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-zinc-800 cursor-pointer hover:-translate-y-0.5 active:translate-y-0" do %>
-    <span aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-white">
-        <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.41-4.04-1.41-.55-1.38-1.33-1.74-1.33-1.74-1.09-.74.08-.72.08-.72 1.2.09 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.48-1.33-5.48-5.92 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.67 1.66.25 2.88.13 3.18.77.84 1.23 1.91 1.23 3.22 0 4.6-2.82 5.61-5.5 5.91.43.38.82 1.1.82 2.22v3.29c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"/>
-      </svg>
-    </span>
-    <span>Continue with GitHub</span>
-  <% end %>
-</div>
-
-    <%= form_for(resource,
-        as: resource_name,
-        url: registration_path(resource_name)) do |f| %>
-
-      <div class="space-y-4">
-
-        <div>
-          <%= f.label :email, class: "block text-sm font-medium" %>
-          <%= f.email_field :email,
-              class: "mt-1 w-full rounded-md border px-3 py-2" %>
-        </div>
-
-        <div>
-          <%= f.label :password, class: "block text-sm font-medium" %>
-          <%= f.password_field :password,
-              class: "mt-1 w-full rounded-md border px-3 py-2" %>
-        </div>
-
-        <div>
-          <%= f.label :password_confirmation,
-              class: "block text-sm font-medium" %>
-          <%= f.password_field :password_confirmation,
-              class: "mt-1 w-full rounded-md border px-3 py-2" %>
-        </div>
-
-        <div>
-          <%= f.submit "Create account",
-              class: "w-full rounded-md bg-black px-4 py-2 text-white" %>
-        </div>
-
+    <div class="mb-8 text-center">
+      <div class="mb-3 flex items-center justify-center gap-2">
+        <span class="h-2.5 w-2.5 rounded-full bg-amber"></span>
+        <span class="font-display text-2xl font-light text-ink-900">Weekbook</span>
       </div>
+      <h1 class="font-display text-3xl font-light text-ink-900">Start your story</h1>
+      <p class="mt-1 text-sm text-ink-500">Your week, turned into something worth keeping.</p>
+    </div>
 
-    <% end %>
+    <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
+
+      <% oauth_available = ENV['GOOGLE_CLIENT_ID'].present? || ENV['GITHUB_CLIENT_ID'].present? %>
+
+      <% if oauth_available %>
+        <div class="space-y-2.5">
+          <% if ENV['GOOGLE_CLIENT_ID'].present? %>
+            <%= button_to user_google_oauth2_omniauth_authorize_path,
+                method: :post,
+                class: "flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-cream-300 bg-white px-4 py-2.5 text-sm font-medium text-ink-800 transition-all duration-150 hover:bg-cream-100 hover:-translate-y-px active:translate-y-0" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4">
+                <path fill="#4285F4" d="M21.8 12.23c0-.68-.06-1.33-.17-1.96H12v3.71h5.5a4.7 4.7 0 0 1-2.04 3.08v2.56h3.3c1.94-1.79 3.04-4.42 3.04-7.39Z"/>
+                <path fill="#34A853" d="M12 22c2.75 0 5.06-.91 6.75-2.47l-3.3-2.56c-.91.61-2.08.97-3.45.97-2.65 0-4.89-1.79-5.69-4.2H2.9v2.64A10 10 0 0 0 12 22Z"/>
+                <path fill="#FBBC05" d="M6.31 13.74A5.98 5.98 0 0 1 6 12c0-.6.11-1.18.31-1.74V7.62H2.9A10 10 0 0 0 2 12c0 1.61.38 3.13 1.05 4.38l3.26-2.64Z"/>
+                <path fill="#EA4335" d="M12 5.98c1.49 0 2.82.51 3.87 1.5l2.9-2.9C17.05 2.98 14.75 2 12 2A10 10 0 0 0 2.9 7.62l3.41 2.64c.8-2.41 3.04-4.28 5.69-4.28Z"/>
+              </svg>
+              <span>Continue with Google</span>
+            <% end %>
+          <% end %>
+
+          <% if ENV['GITHUB_CLIENT_ID'].present? %>
+            <%= button_to user_github_omniauth_authorize_path,
+                method: :post,
+                class: "flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-cream-300 bg-white px-4 py-2.5 text-sm font-medium text-ink-800 transition-all duration-150 hover:bg-cream-100 hover:-translate-y-px active:translate-y-0" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-ink-900">
+                <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.41-4.04-1.41-.55-1.38-1.33-1.74-1.33-1.74-1.09-.74.08-.72.08-.72 1.2.09 1.84 1.24 1.84 1.24 1.08 1.84 2.82 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.48-1.33-5.48-5.92 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.67 1.66.25 2.88.13 3.18.77.84 1.23 1.91 1.23 3.22 0 4.6-2.82 5.61-5.5 5.91.43.38.82 1.1.82 2.22v3.29c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z"/>
+              </svg>
+              <span>Continue with GitHub</span>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="my-5 flex items-center gap-3">
+          <div class="h-px flex-1 bg-cream-300"></div>
+          <span class="text-xs text-ink-400">or</span>
+          <div class="h-px flex-1 bg-cream-300"></div>
+        </div>
+      <% end %>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <div class="space-y-4">
+          <div>
+            <%= f.label :email, class: "mb-1 block text-sm font-medium text-ink-700" %>
+            <%= f.email_field :email,
+                autofocus: true,
+                autocomplete: "email",
+                class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber" %>
+          </div>
+
+          <div>
+            <%= f.label :password, class: "mb-1 block text-sm font-medium text-ink-700" %>
+            <%= f.password_field :password,
+                autocomplete: "new-password",
+                class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber" %>
+            <p class="mt-1 text-xs text-ink-400">At least 6 characters.</p>
+          </div>
+
+          <div>
+            <%= f.label :password_confirmation, "Confirm password", class: "mb-1 block text-sm font-medium text-ink-700" %>
+            <%= f.password_field :password_confirmation,
+                autocomplete: "new-password",
+                class: "w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber" %>
+          </div>
+
+          <%= f.submit "Create account",
+              class: "mt-1 w-full cursor-pointer rounded-lg bg-amber py-2.5 text-sm font-medium text-ink-900 transition-all duration-200 hover:bg-amber-light" %>
+        </div>
+      <% end %>
+
+    </div>
+
+    <p class="mt-5 text-center text-sm text-ink-500">
+      Already have an account?
+      <%= link_to "Sign in", new_user_session_path,
+          class: "font-medium text-ink-800 underline underline-offset-2 transition-colors hover:text-amber" %>
+    </p>
 
   </div>
-
 </div>

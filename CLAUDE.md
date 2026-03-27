@@ -9,6 +9,27 @@
 
 > **Updated after every coding session. Read this first to understand current state.**
 
+**2026-03-27 — Phase 6 + Phase 8: AI Summarization, Pundit Auth, Error Pages, OG Meta (PRs #14 + #15)**
+
+Two PRs built in parallel:
+
+**PR #15 — feat/ai-summarization (Phase 6 — merge first)**
+
+The "generate your weekly digest" feature. Wired Sidekiq as the ActiveJob backend (`config/application.rb`) with a Redis initializer that reads `REDIS_URL`. Built two new pieces: `OpenaiSummarizer` service (calls GPT-4o with a reflective system prompt — "warm first-person narrative, no bullet points, sound human"), and `DigestSummarizerJob` (Sidekiq job that loads entries + prompt, calls the service, saves to WeeklyDigest). Service gracefully no-ops if `OPENAI_API_KEY` is absent. UI: amber "Generate this week's digest →" card on entries index (only when entries exist). New `POST /weekly_digests/:id/generate` route + action — enqueues job, redirects to edit with a "refresh in 15s" notice.
+
+**Before this works in production, you need to:**
+1. Create a Render Redis instance → set `REDIS_URL` env var
+2. Add a Render worker service: start command `bundle exec sidekiq`
+3. Add `OPENAI_API_KEY` env var
+
+**PR #14 — feat/polish (Phase 8 — merge second)**
+
+Four improvements: (1) **Pundit** — `WeeklyDigestPolicy` and `EntryPolicy` now enforce ownership at the controller layer, not just in views. Drafts actually 403 for non-owners. (2) **Branded error pages** — replaced `public/404.html` and `public/500.html` with Weekbook-styled HTML (off-black, cream, amber dot, proper fonts). (3) **OG meta tags** — digest show page emits `og:title`, `og:description` so link previews work. (4) **N+1 fix** — feed controller eager-loads `user: { avatar_attachment: :blob }`. 46 policy specs, all passing.
+
+**Merge order: PR #15 (AI) first, then PR #14 (polish).** PR #14 references `generate?` in the Pundit policy which expects the generate action to exist.
+
+---
+
 **2026-03-27 — Mobile Responsiveness (PR #13, branch `feat/mobile`)**
 
 The app looked good on desktop but broke on mobile. Here's what we fixed:
@@ -289,24 +310,26 @@ TWILIO_PHONE_NUMBER=...    # Phase 7
 | ✅ | OAuth (Google + GitHub) | Identity model, callback controller, CSRF fix |
 | ✅ | Design system | Tailwind v4, cream/amber/ink palette, Fraunces + Inter |
 | ✅ | WeeklyDigest | Draft/publish workflow, profile digest grid |
+| ✅ | Entries | Private raw inputs, char-count controller, Turbo Streams |
+| ✅ | Prompt system | PromptTemplate + PromptDispatch, 22 seeded prompts |
+| ✅ | Feed | Published digests from followed users, follow suggestions |
+| ✅ | Mobile | Hamburger nav, responsive padding, auth page fixes |
+
+### Merged to main
+All PRs #1–#13 are merged and live on main.
 
 ### Pending merge (PRs open, tests passing)
 | Branch | PR | Feature | Merge order |
 |---|---|---|---|
-| `feat/entries` | PR10 | Entry model, focused writing UI, char-count controller, Turbo Streams | **Merge first** |
-| `feat/prompts` | PR11 | PromptTemplate + PromptDispatch, 22 seeds, prompt banner | **Merge second** |
-| `feat/feed` | PR12 | Feed of published digests, follow suggestions, pagination | **Merge third** |
-| `feat/mobile` | PR13 | Mobile nav (hamburger), responsive card padding, auth page fix | **Merge fourth** |
+| `feat/ai-summarization` | PR15 | AI digest generation (Sidekiq + GPT-4o) | **Merge first** |
+| `feat/polish` | PR14 | Pundit auth, branded error pages, OG meta, N+1 fixes | **Merge second** |
 
-> **Important:** These branches are chained (each cut from the previous). Merge in order.
-> After merging feat/prompts (PR11), run `rails db:seed` on Render to load prompt templates.
+> After merging feat/ai-summarization: add `REDIS_URL`, `OPENAI_API_KEY`, and Sidekiq worker service to Render before the feature activates.
 
 ### Not yet started
 | Phase | Feature | Blocker/Notes |
 |---|---|---|
-| 6 | AI summarization (OpenAI → WeeklyDigest narrative, Sidekiq job) | Add `REDIS_URL` + `OPENAI_API_KEY` to Render before starting |
 | 7 | SMS ingestion via Twilio (inbound texts → entries) | Needs Twilio account + phone number |
-| 8 | Polish (ViewComponents, Pundit authz, N+1 fixes, OG meta) | No blockers |
 
 ---
 

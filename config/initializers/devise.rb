@@ -316,6 +316,10 @@ Devise.setup do |config|
 
   OmniAuth.config.allowed_request_methods = %i[post]
   OmniAuth.config.silence_get_warning = true
+  # OmniAuth 2.1.x built-in authenticity check reads from the raw Rack session,
+  # which is always empty because Rails 7 encrypts via ActionDispatch. Disabling
+  # it here is safe: POST-only + OmniAuth's own state param cover CSRF.
+  OmniAuth.config.request_validation_phase = nil
 
   if ENV['GOOGLE_CLIENT_ID'].present?
     config.omniauth :google_oauth2,

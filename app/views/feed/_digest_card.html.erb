@@ -1,0 +1,35 @@
+<article class="group rounded-xl border border-cream-200 bg-white p-6 shadow-warm transition-all duration-200 hover:border-cream-300 hover:-translate-y-px" data-controller="fade-in">
+  <div class="mb-4 flex items-center gap-3">
+    <% if digest.user.avatar.attached? %>
+      <%= image_tag digest.user.avatar.variant(resize_to_fill: [36, 36]),
+          class: "h-9 w-9 rounded-full object-cover",
+          alt: digest.user.name_for_display %>
+    <% else %>
+      <div class="flex h-9 w-9 items-center justify-center rounded-full bg-ink-800 text-sm font-medium text-white">
+        <%= digest.user.name_for_display.first.upcase %>
+      </div>
+    <% end %>
+    <div>
+      <% if digest.user.username.present? %>
+        <%= link_to digest.user.name_for_display, user_profile_path(digest.user.username),
+            class: "text-sm font-medium text-ink-800 hover:text-amber transition-colors" %>
+      <% else %>
+        <span class="text-sm font-medium text-ink-800"><%= digest.user.name_for_display %></span>
+      <% end %>
+      <p class="text-xs text-ink-400"><%= digest.week_range_label %></p>
+    </div>
+    <div class="ml-auto text-right">
+      <p class="font-display text-2xl font-light text-amber leading-none"><%= digest.week_number %></p>
+      <p class="text-xs text-ink-400">week</p>
+    </div>
+  </div>
+
+  <% if digest.summary_line.present? %>
+    <p class="text-sm leading-relaxed text-ink-700"><%= digest.summary_line %></p>
+  <% elsif digest.content.present? %>
+    <p class="text-sm leading-relaxed text-ink-700"><%= truncate(digest.content, length: 180) %></p>
+  <% end %>
+
+  <%= link_to "Read →", weekly_digest_path(digest),
+      class: "mt-4 inline-block text-xs font-medium text-amber transition-colors hover:text-amber-dark" %>
+</article>

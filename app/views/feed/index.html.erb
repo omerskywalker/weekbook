@@ -1,0 +1,51 @@
+<div class="mx-auto max-w-2xl px-4 py-10">
+
+  <div class="mb-8 flex items-end justify-between">
+    <div>
+      <h1 class="font-display text-3xl font-light text-ink-900">Feed</h1>
+      <p class="mt-1 text-sm text-ink-500">Published digests from people you follow.</p>
+    </div>
+    <%= link_to "Write", new_entry_path,
+        class: "rounded-md bg-amber px-4 py-2 text-sm font-medium text-ink-900 transition-all duration-150 hover:bg-amber-light hover:-translate-y-px active:translate-y-0" %>
+  </div>
+
+  <% if @digests.empty? && @suggestions.nil? %>
+    <%# Has following but they have no published digests %>
+    <div class="rounded-xl border border-cream-200 bg-cream-50 px-6 py-12 text-center">
+      <p class="font-display text-xl font-light text-ink-700">Nothing here yet.</p>
+      <p class="mt-2 text-sm text-ink-400">The people you follow haven't published any digests.</p>
+      <p class="mt-1 text-sm text-ink-400">
+        Or <%= link_to "write your own", new_entry_path, class: "text-amber hover:text-amber-dark transition-colors" %>.
+      </p>
+    </div>
+
+  <% elsif @suggestions %>
+    <%# Not following anyone — show suggestions %>
+    <div class="rounded-xl border border-cream-200 bg-cream-50 px-6 py-10 text-center">
+      <p class="font-display text-xl font-light text-ink-700">Your feed is empty.</p>
+      <p class="mt-2 text-sm text-ink-400">Follow some people to see their weekly digests here.</p>
+    </div>
+
+    <% if @suggestions.any? %>
+      <div class="mt-8">
+        <h2 class="mb-4 text-xs font-medium uppercase tracking-widest text-ink-400">People to follow</h2>
+        <div class="space-y-3">
+          <%= render partial: 'suggestion', collection: @suggestions, as: :suggested_user %>
+        </div>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div id="digest-feed" class="space-y-5">
+      <%= render partial: 'digest_card', collection: @digests, as: :digest %>
+    </div>
+
+    <% if @has_more %>
+      <div class="mt-8 text-center">
+        <%= link_to "Load more", feed_path(page: @page + 1),
+            class: "inline-block rounded-lg border border-cream-300 bg-white px-6 py-2.5 text-sm text-ink-600 transition-all duration-150 hover:border-cream-400 hover:bg-cream-50" %>
+      </div>
+    <% end %>
+  <% end %>
+
+</div>

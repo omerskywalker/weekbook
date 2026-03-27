@@ -29,6 +29,8 @@
           <% if user_signed_in? %>
             <%= link_to "Write", new_entry_path,
                 class: "rounded-md bg-amber/10 px-3 py-1.5 text-amber transition-colors duration-200 hover:bg-amber/20" %>
+            <%= link_to "Feed", feed_path,
+                class: "text-ink-300 transition-colors duration-200 hover:text-white" %>
             <%= link_to "Digests", weekly_digests_path,
                 class: "text-ink-300 transition-colors duration-200 hover:text-white" %>
 

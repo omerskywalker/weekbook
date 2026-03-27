@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   }
 
   root 'home#index'
+  get '/feed', to: 'feed#index', as: :feed
 
   resource :profile, only: %i[edit update]
   get '/u/:username', to: 'profiles#show', as: :user_profile

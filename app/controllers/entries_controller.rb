@@ -40,6 +40,7 @@ class EntriesController < ApplicationController
   end
 
   def destroy
+    authorize @entry
     @entry.destroy
     respond_to do |format|
       format.html { redirect_to entries_path, notice: 'Entry removed.' }

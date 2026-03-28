@@ -10,9 +10,7 @@ class WeeklyDigestsController < ApplicationController
   end
 
   def show
-    return if @digest.published? || (user_signed_in? && current_user == @digest.user)
-
-    redirect_to root_path, alert: 'This digest is not published.'
+    authorize @digest
   end
 
   def new
@@ -36,9 +34,12 @@ class WeeklyDigestsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    authorize @digest
+  end
 
   def update
+    authorize @digest
     if @digest.update(digest_params)
       redirect_to weekly_digest_path(@digest), notice: 'Digest saved.'
     else
@@ -47,11 +48,13 @@ class WeeklyDigestsController < ApplicationController
   end
 
   def publish
+    authorize @digest
     @digest.publish!
     redirect_to weekly_digest_path(@digest), notice: 'Digest published.'
   end
 
   def unpublish
+    authorize @digest
     @digest.unpublish!
     redirect_to weekly_digest_path(@digest), notice: 'Digest moved back to draft.'
   end

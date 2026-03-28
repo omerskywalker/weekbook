@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePromptTemplates < ActiveRecord::Migration[7.1]
   def change
     create_table :prompt_templates do |t|
@@ -7,6 +9,6 @@ class CreatePromptTemplates < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    add_index :prompt_templates, [:category, :active]
+    add_index :prompt_templates, %i[category active]
   end
 end

@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # ─── Lint ────────────────────────────────────────────────────────────────────
+  lint:
+    name: RuboCop
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --no-color --parallel
+
+  # ─── Security ────────────────────────────────────────────────────────────────
+  security:
+    name: Security scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
+
+      - name: Brakeman static analysis
+        # EOLRuby + EOLRails skipped — tracked separately as upgrade tasks
+        run: bundle exec brakeman --no-pager -q --exit-on-warn -x EOLRuby,EOLRails
+
+      - name: Bundle audit (CVE check)
+        run: |
+          bundle exec bundle-audit update
+          bundle exec bundle-audit check
+
+  # ─── Tests ───────────────────────────────────────────────────────────────────
+  test:
+    name: RSpec
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: weekbook
+          POSTGRES_PASSWORD: weekbook
+          POSTGRES_DB: weekbook_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://weekbook:weekbook@localhost:5432/weekbook_test
+      # Dummy values so initializers don't crash in CI
+      SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE || 'ci_dummy_secret_key_base_at_least_64_chars_long_xxxxxxxxxxx' }}
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      AWS_REGION: us-east-1
+      AWS_S3_BUCKET: dummy-bucket
+      REDIS_URL: redis://localhost:6379/0
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2.2"
+          bundler-cache: true
+
+      - name: Set up database
+        run: |
+          bundle exec rails db:schema:load
+          bundle exec rails db:seed
+
+      - name: Run RSpec
+        run: bundle exec rspec --no-color --format progress

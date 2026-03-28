@@ -37,23 +37,25 @@ RSpec.describe 'Entries', type: :request do
 
     context 'with valid params' do
       it 'creates an entry and redirects' do
-        expect {
-          post entries_path, params: { entry: { content: 'Shipped the search feature today, feels good.' } }
-        }.to change(Entry, :count).by(1)
+        expect do
+          post entries_path,
+               params: { entry: { content: 'Shipped the search feature today, feels good.' } }
+        end.to change(Entry, :count).by(1)
         expect(response).to redirect_to(entries_path)
       end
 
       it 'sets week_start_date to current Monday' do
-        post entries_path, params: { entry: { content: 'Shipped the search feature today, feels good.' } }
+        post entries_path,
+             params: { entry: { content: 'Shipped the search feature today, feels good.' } }
         expect(Entry.last.week_start_date).to eq(Date.current.beginning_of_week(:monday))
       end
     end
 
     context 'with invalid params' do
       it 'does not create an entry and renders index' do
-        expect {
+        expect do
           post entries_path, params: { entry: { content: 'hi' } }
-        }.not_to change(Entry, :count)
+        end.not_to change(Entry, :count)
         expect(response).to have_http_status(:unprocessable_content)
       end
     end
@@ -62,7 +64,8 @@ RSpec.describe 'Entries', type: :request do
       before { sign_out user }
 
       it 'redirects to sign in' do
-        post entries_path, params: { entry: { content: 'Shipped the search feature today, feels good.' } }
+        post entries_path,
+             params: { entry: { content: 'Shipped the search feature today, feels good.' } }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -74,9 +77,9 @@ RSpec.describe 'Entries', type: :request do
     let!(:entry) { create(:entry, user: user) }
 
     it 'destroys the entry and redirects' do
-      expect {
+      expect do
         delete entry_path(entry)
-      }.to change(Entry, :count).by(-1)
+      end.to change(Entry, :count).by(-1)
       expect(response).to redirect_to(entries_path)
     end
 

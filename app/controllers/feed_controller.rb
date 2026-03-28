@@ -39,7 +39,7 @@ class FeedController < ApplicationController
         .where(weekly_digests: { status: 'published' })
         .select('users.*, COUNT(weekly_digests.id) AS digest_count')
         .group('users.id')
-        .order('digest_count DESC')
+        .order(digest_count: :desc)
         .limit(5)
   end
 end

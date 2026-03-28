@@ -72,11 +72,12 @@ group :development, :test do
   # Testing
   gem 'factory_bot_rails'
   gem 'rspec-rails'
-
 end
 
 group :development do
+  gem 'brakeman', require: false
   gem 'bullet'
+  gem 'bundler-audit', require: false
   gem 'foreman'
   gem 'letter_opener'
   gem 'rubocop', require: false

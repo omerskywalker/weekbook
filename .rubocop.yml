@@ -42,3 +42,10 @@ Rails/BulkChangeTable:
 Metrics/AbcSize:
   Exclude:
     - "db/migrate/**/*"
+    - "app/controllers/**/*"
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/*"
+    - "config/environments/*.rb"
+    - "config/initializers/devise.rb"

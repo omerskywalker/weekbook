@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateEntries < ActiveRecord::Migration[7.1]
   def change
     create_table :entries do |t|
@@ -8,6 +10,6 @@ class CreateEntries < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    add_index :entries, [:user_id, :week_start_date]
+    add_index :entries, %i[user_id week_start_date]
   end
 end

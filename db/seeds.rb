@@ -41,4 +41,4 @@ prompts.each do |attrs|
   end
 end
 
-puts "Seeded #{PromptTemplate.count} prompt templates."
+Rails.logger.debug { "Seeded #{PromptTemplate.count} prompt templates." }

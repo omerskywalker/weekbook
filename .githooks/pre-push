@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# .githooks/pre-push
+# Runs before every `git push`. Activate with: bin/setup-hooks
+#
+# Checks: RuboCop → RSpec
+# Skips:  set SKIP_HOOKS=1 to bypass (e.g. SKIP_HOOKS=1 git push)
+
+set -e
+
+if [ "${SKIP_HOOKS}" = "1" ]; then
+  echo "[hooks] Skipping pre-push checks (SKIP_HOOKS=1)"
+  exit 0
+fi
+
+echo ""
+echo "▶ Pre-push checks — RuboCop + RSpec"
+echo "  (run SKIP_HOOKS=1 git push to bypass)"
+echo ""
+
+# ── RuboCop ──────────────────────────────────────────────────────────────────
+echo "── RuboCop ──"
+if ! bundle exec rubocop --no-color --parallel --format progress; then
+  echo ""
+  echo "✗ RuboCop failed. Fix offences before pushing."
+  echo "  Tip: run  bundle exec rubocop -A  to auto-correct safe fixes."
+  exit 1
+fi
+
+# ── RSpec ─────────────────────────────────────────────────────────────────────
+echo ""
+echo "── RSpec ──"
+if ! bundle exec rspec --no-color --format progress; then
+  echo ""
+  echo "✗ Tests failed. Fix failures before pushing."
+  exit 1
+fi
+
+echo ""
+echo "✓ All checks passed."
+echo ""

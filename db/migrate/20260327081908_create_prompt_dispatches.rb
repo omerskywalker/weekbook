@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePromptDispatches < ActiveRecord::Migration[7.1]
   def change
     create_table :prompt_dispatches do |t|
@@ -9,6 +11,6 @@ class CreatePromptDispatches < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
-    add_index :prompt_dispatches, [:user_id, :week_start_date], unique: true
+    add_index :prompt_dispatches, %i[user_id week_start_date], unique: true
   end
 end

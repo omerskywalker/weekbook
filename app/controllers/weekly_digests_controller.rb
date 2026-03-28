@@ -50,6 +50,7 @@ class WeeklyDigestsController < ApplicationController
   def publish
     authorize @digest
     @digest.publish!
+    NotifyFollowersJob.perform_later(@digest.id)
     redirect_to weekly_digest_path(@digest), notice: 'Digest published.'
   end
 

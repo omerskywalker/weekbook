@@ -1,0 +1,12 @@
+<%= @author.name_for_display %> published their Week <%= @digest.week_number %> digest on Weekbook.
+
+<%= @digest.week_range_label %>
+<% if @digest.summary_line.present? %>
+
+<%= @digest.summary_line %>
+<% end %>
+
+Read it here: <%= weekly_digest_url(@digest) %>
+
+---
+You're receiving this because you follow <%= @author.name_for_display %> on Weekbook.

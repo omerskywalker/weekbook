@@ -84,9 +84,7 @@ jobs:
           bundler-cache: true
 
       - name: Set up database
-        run: |
-          bundle exec rails db:schema:load
-          bundle exec rails db:seed
+        run: bundle exec rails db:schema:load
 
       - name: Run RSpec
         run: bundle exec rspec --no-color --format progress

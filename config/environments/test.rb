@@ -63,4 +63,8 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Don't raise when compiled assets (e.g. tailwind.css) are missing in CI —
+  # request specs don't need CSS to test controller behaviour.
+  config.assets.raise_runtime_errors = false
 end

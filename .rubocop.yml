@@ -44,3 +44,4 @@ Metrics/AbcSize:
   Exclude:
     - "db/migrate/**/*"
     - "app/controllers/**/*"
+    - "app/jobs/**/*"

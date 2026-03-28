@@ -21,7 +21,9 @@ class WeeklyDigestsController < ApplicationController
     redirect_to edit_weekly_digest_path(@digest), notice: 'A digest for this week already exists.'
   end
 
-  def edit; end
+  def edit
+    authorize @digest
+  end
 
   def create
     @digest = current_user.weekly_digests.build(digest_params)
@@ -34,10 +36,6 @@ class WeeklyDigestsController < ApplicationController
     else
       render :new, status: :unprocessable_content
     end
-  end
-
-  def edit
-    authorize @digest
   end
 
   def update
@@ -65,7 +63,7 @@ class WeeklyDigestsController < ApplicationController
     week_start_date = @digest.week_start_date
     DigestSummarizerJob.perform_later(@digest.user_id, week_start_date.to_s)
     redirect_to edit_weekly_digest_path(@digest),
-                notice: "Generating your digest — check back in about 15 seconds and refresh."
+                notice: 'Generating your digest — check back in about 15 seconds and refresh.'
   end
 
   private

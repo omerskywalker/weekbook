@@ -15,23 +15,23 @@ class OpenaiSummarizer
 
   def call
     return nil if @entries.empty?
-    return nil if ENV["OPENAI_API_KEY"].to_s.strip.empty?
+    return nil if ENV['OPENAI_API_KEY'].to_s.strip.empty?
 
-    client = OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
+    client = OpenAI::Client.new(access_token: ENV.fetch('OPENAI_API_KEY', nil))
 
     response = client.chat(
       parameters: {
-        model: "gpt-4o",
+        model: 'gpt-4o',
         temperature: 0.7,
         max_tokens: 600,
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: build_user_content }
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: build_user_content }
         ]
       }
     )
 
-    response.dig("choices", 0, "message", "content")&.strip
+    response.dig('choices', 0, 'message', 'content')&.strip
   rescue StandardError => e
     Rails.logger.error("[OpenaiSummarizer] Error: #{e.message}")
     nil

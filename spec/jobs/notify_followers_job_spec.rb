@@ -10,23 +10,23 @@ RSpec.describe NotifyFollowersJob, type: :job do
   before { follower.active_follows.create!(followed: author) }
 
   describe '#perform' do
-    it 'sends an email to each follower' do
+    it 'enqueues a digest email for each follower' do
       expect do
         described_class.new.perform(digest.id)
-      end.to change(ActionMailer::Base.deliveries, :count).by(1)
+      end.to have_enqueued_mail(DigestMailer, :new_digest).with(follower, digest)
     end
 
     it 'does nothing for a non-existent digest' do
       expect do
         described_class.new.perform(999_999)
-      end.not_to change(ActionMailer::Base.deliveries, :count)
+      end.not_to have_enqueued_mail(DigestMailer, :new_digest)
     end
 
     it 'does nothing if digest is not published' do
       draft = create(:weekly_digest, user: author, status: 'draft')
       expect do
         described_class.new.perform(draft.id)
-      end.not_to change(ActionMailer::Base.deliveries, :count)
+      end.not_to have_enqueued_mail(DigestMailer, :new_digest)
     end
   end
 end

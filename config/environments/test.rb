@@ -70,4 +70,7 @@ Rails.application.configure do
   # Don't raise when compiled assets (e.g. tailwind.css) are missing in CI —
   # request specs don't need CSS to test controller behaviour.
   config.assets.raise_runtime_errors = false
+
+  # Use test adapter so perform_later queues in memory (no Redis needed in CI)
+  config.active_job.queue_adapter = :test
 end

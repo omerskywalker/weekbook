@@ -95,13 +95,10 @@ RSpec.describe 'WeeklyDigests', type: :request do
     end
 
     it 'enqueues NotifyFollowersJob on publish' do
-      ActiveJob::Base.queue_adapter = :test
       sign_in user
       expect do
         patch publish_weekly_digest_path(digest)
       end.to have_enqueued_job(NotifyFollowersJob).with(digest.id)
-    ensure
-      ActiveJob::Base.queue_adapter = :sidekiq
     end
 
     it 'rejects non-owners' do

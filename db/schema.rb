@@ -108,10 +108,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_28_044409) do
     t.string "display_name"
     t.text "bio"
     t.string "phone"
-    t.boolean "phone_verified"
+    t.boolean "phone_verified", default: false, null: false
     t.string "phone_verification_code"
     t.datetime "phone_verification_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["phone"], name: "index_users_on_phone", unique: true, where: "(phone IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

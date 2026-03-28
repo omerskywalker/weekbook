@@ -9,7 +9,8 @@ class PromptDispatch < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates :dispatched_at, presence: true
   validates :week_start_date, presence: true
-  validates :user_id, uniqueness: { scope: :week_start_date, message: 'already has a prompt for this week' }
+  validates :user_id,
+            uniqueness: { scope: :week_start_date, message: 'already has a prompt for this week' }
 
   scope :for_week, ->(date) { where(week_start_date: date.beginning_of_week(:monday)) }
   scope :pending, -> { where(status: 'pending') }

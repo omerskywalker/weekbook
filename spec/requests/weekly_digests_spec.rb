@@ -69,11 +69,11 @@ RSpec.describe 'WeeklyDigests', type: :request do
   describe 'POST /weekly_digests' do
     it 'creates a digest for authenticated users' do
       sign_in user
-      expect {
+      expect do
         post weekly_digests_path, params: {
           weekly_digest: { content: 'A great week.', summary_line: 'Summary' }
         }
-      }.to change(WeeklyDigest, :count).by(1)
+      end.to change(WeeklyDigest, :count).by(1)
     end
 
     it 'redirects to edit after creation' do

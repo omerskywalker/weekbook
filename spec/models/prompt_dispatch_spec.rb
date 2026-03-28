@@ -10,7 +10,8 @@ RSpec.describe PromptDispatch, type: :model do
 
     it 'prevents two dispatches for the same user and week' do
       dispatch = create(:prompt_dispatch)
-      duplicate = build(:prompt_dispatch, user: dispatch.user, week_start_date: dispatch.week_start_date)
+      duplicate = build(:prompt_dispatch, user: dispatch.user,
+                                          week_start_date: dispatch.week_start_date)
       expect(duplicate).not_to be_valid
     end
 

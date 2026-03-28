@@ -10,7 +10,8 @@ class WeeklyDigest < ApplicationRecord
   validates :year, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :summary_line, length: { maximum: 160 }, allow_blank: true
-  validates :user_id, uniqueness: { scope: :week_start_date, message: 'already has a digest for this week' }
+  validates :user_id,
+            uniqueness: { scope: :week_start_date, message: 'already has a digest for this week' }
 
   scope :published, -> { where(status: 'published') }
   scope :draft, -> { where(status: 'draft') }

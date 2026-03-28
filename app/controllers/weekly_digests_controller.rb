@@ -16,10 +16,12 @@ class WeeklyDigestsController < ApplicationController
   def new
     @digest = WeeklyDigest.current_week(current_user)
 
-    if @digest.persisted?
-      redirect_to edit_weekly_digest_path(@digest), notice: 'A digest for this week already exists.'
-    end
+    return unless @digest.persisted?
+
+    redirect_to edit_weekly_digest_path(@digest), notice: 'A digest for this week already exists.'
   end
+
+  def edit; end
 
   def create
     @digest = current_user.weekly_digests.build(digest_params)
@@ -30,7 +32,7 @@ class WeeklyDigestsController < ApplicationController
     if @digest.save
       redirect_to edit_weekly_digest_path(@digest), notice: 'Digest created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -43,7 +45,7 @@ class WeeklyDigestsController < ApplicationController
     if @digest.update(digest_params)
       redirect_to weekly_digest_path(@digest), notice: 'Digest saved.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

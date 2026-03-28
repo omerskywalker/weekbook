@@ -26,8 +26,8 @@ RSpec.describe 'Feed', type: :request do
         before do
           Follow.create!(follower: user, followed: other_user)
           create(:weekly_digest, user: other_user, status: 'published',
-                 week_start_date: Date.current.beginning_of_week(:monday),
-                 week_number: Date.current.cweek, year: Date.current.cwyear)
+                                 week_start_date: Date.current.beginning_of_week(:monday),
+                                 week_number: Date.current.cweek, year: Date.current.cwyear)
         end
 
         it 'shows the digest in the feed' do
@@ -44,8 +44,8 @@ RSpec.describe 'Feed', type: :request do
 
         it 'shows people to follow when active publishers exist' do
           create(:weekly_digest, user: other_user, status: 'published',
-                 week_start_date: Date.current.beginning_of_week(:monday),
-                 week_number: Date.current.cweek, year: Date.current.cwyear)
+                                 week_start_date: Date.current.beginning_of_week(:monday),
+                                 week_number: Date.current.cweek, year: Date.current.cwyear)
           get feed_path
           expect(response.body).to include('People to follow')
         end
@@ -55,8 +55,8 @@ RSpec.describe 'Feed', type: :request do
         before do
           Follow.create!(follower: user, followed: other_user)
           create(:weekly_digest, user: other_user, status: 'draft',
-                 week_start_date: Date.current.beginning_of_week(:monday),
-                 week_number: Date.current.cweek, year: Date.current.cwyear)
+                                 week_start_date: Date.current.beginning_of_week(:monday),
+                                 week_number: Date.current.cweek, year: Date.current.cwyear)
         end
 
         it 'does not show draft digests' do

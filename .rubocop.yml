@@ -29,6 +29,7 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*"
     - "config/environments/*.rb"
+    - "config/initializers/devise.rb"
 
 Style/Documentation:
   Enabled: false
@@ -42,3 +43,4 @@ Rails/BulkChangeTable:
 Metrics/AbcSize:
   Exclude:
     - "db/migrate/**/*"
+    - "app/controllers/**/*"

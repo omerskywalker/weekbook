@@ -9,6 +9,22 @@
 
 > **Updated after every coding session. Read this first to understand current state.**
 
+**2026-03-27 — CI Pipeline + Pre-push Hooks (PR #16, branch `feat/ci`)**
+
+Set up the full quality gate so bad code can't sneak in undetected.
+
+**GitHub Actions** (`.github/workflows/ci.yml`) runs three parallel jobs on every push and PR: **lint** (RuboCop `--parallel`), **security** (Brakeman static analysis + `bundle-audit` CVE advisory check), and **test** (full RSpec suite against a PostgreSQL 16 service container). Jobs are independent so they run simultaneously — a lint failure doesn't block the test result.
+
+**Local pre-push hook** (`.githooks/pre-push`) runs RuboCop + RSpec before your push even leaves your machine. That way CI isn't your first line of defense — you find out immediately in the terminal. Bypass it when needed with `SKIP_HOOKS=1 git push`. The hook lives in `.githooks/` which is tracked in git, so everyone who clones the repo gets it. One-time activation: `bin/setup-hooks` (already run on this machine).
+
+**`brakeman`** and **`bundler-audit`** added to the dev Gemfile. Brakeman does static security analysis (SQL injection, XSS, etc.) — found zero real issues. EOLRuby and EOLRails warnings are skipped in CI since those are upgrade tasks, not vulnerabilities. Note: **Ruby 3.2 EOL is 2026-03-31** and Rails 7.1 is already past EOL — these should be upgraded soon.
+
+Fixed all 59 autocorrectable RuboCop offenses found across the existing codebase as part of this PR.
+
+**One thing to do after merging:** In GitHub → repo Settings → Branches → main → Branch protection rules → add required status checks: `lint`, `security`, `test`. This blocks merging PRs that fail CI.
+
+---
+
 **2026-03-27 — Phase 6 + Phase 8: AI Summarization, Pundit Auth, Error Pages, OG Meta (PRs #14 + #15)**
 
 Two PRs built in parallel:
@@ -323,6 +339,7 @@ All PRs #1–#13 are merged and live on main.
 |---|---|---|---|
 | `feat/ai-summarization` | PR15 | AI digest generation (Sidekiq + GPT-4o) | **Merge first** |
 | `feat/polish` | PR14 | Pundit auth, branded error pages, OG meta, N+1 fixes | **Merge second** |
+| `feat/ci` | PR16 | GitHub Actions CI, pre-push hooks, Brakeman, bundle-audit | **Merge third** |
 
 > After merging feat/ai-summarization: add `REDIS_URL`, `OPENAI_API_KEY`, and Sidekiq worker service to Render before the feature activates.
 

@@ -324,14 +324,14 @@ Devise.setup do |config|
   if ENV['GOOGLE_CLIENT_ID'].present?
     config.omniauth :google_oauth2,
                     ENV['GOOGLE_CLIENT_ID'],
-                    ENV['GOOGLE_CLIENT_SECRET'],
+                    ENV.fetch('GOOGLE_CLIENT_SECRET', nil),
                     {}
   end
 
   if ENV['GITHUB_CLIENT_ID'].present?
     config.omniauth :github,
                     ENV['GITHUB_CLIENT_ID'],
-                    ENV['GITHUB_CLIENT_SECRET'],
+                    ENV.fetch('GITHUB_CLIENT_SECRET', nil),
                     scope: 'user:email'
   end
 end

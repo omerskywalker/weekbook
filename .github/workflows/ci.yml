@@ -41,9 +41,11 @@ jobs:
         run: bundle exec brakeman --no-pager -q --exit-on-warn -x EOLRuby,EOLRails
 
       - name: Bundle audit (CVE check)
+        # CVE-2026-33658: activestorage 7.1 DoS via multi-range requests —
+        # requires Rails 7.2+ upgrade, tracked separately
         run: |
           bundle exec bundle-audit update
-          bundle exec bundle-audit check
+          bundle exec bundle-audit check --ignore CVE-2026-33658
 
   # ─── Tests ───────────────────────────────────────────────────────────────────
   test:
@@ -85,6 +87,9 @@ jobs:
 
       - name: Set up database
         run: bundle exec rails db:schema:load
+
+      - name: Build Tailwind CSS
+        run: bundle exec rails tailwindcss:build
 
       - name: Run RSpec
         run: bundle exec rspec --no-color --format progress

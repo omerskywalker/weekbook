@@ -96,9 +96,9 @@ RSpec.describe 'WeeklyDigests', type: :request do
 
     it 'enqueues NotifyFollowersJob on publish' do
       sign_in user
-      allow(NotifyFollowersJob).to receive(:perform_later)
-      patch publish_weekly_digest_path(digest)
-      expect(NotifyFollowersJob).to have_received(:perform_later).with(digest.id)
+      expect do
+        patch publish_weekly_digest_path(digest)
+      end.to have_enqueued_job(NotifyFollowersJob).with(digest.id)
     end
 
     it 'rejects non-owners' do

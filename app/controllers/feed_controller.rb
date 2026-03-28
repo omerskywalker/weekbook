@@ -11,7 +11,7 @@ class FeedController < ApplicationController
     @digests = WeeklyDigest
                .published
                .where(user_id: following_ids)
-               .includes(:user)
+               .includes(user: { avatar_attachment: :blob })
                .recent
                .limit(PER_PAGE)
                .offset(page_offset)

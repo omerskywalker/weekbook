@@ -2,17 +2,15 @@
 
 class WeeklyDigestsController < ApplicationController
   before_action :authenticate_user!, except: %i[show]
-  before_action :set_digest, only: %i[show edit update publish unpublish]
-  before_action :require_owner!, only: %i[edit update publish unpublish]
+  before_action :set_digest, only: %i[show edit update publish unpublish generate]
+  before_action :require_owner!, only: %i[edit update publish unpublish generate]
 
   def index
     @digests = current_user.weekly_digests.recent
   end
 
   def show
-    return if @digest.published? || (user_signed_in? && current_user == @digest.user)
-
-    redirect_to root_path, alert: 'This digest is not published.'
+    authorize @digest
   end
 
   def new
@@ -38,7 +36,12 @@ class WeeklyDigestsController < ApplicationController
     end
   end
 
+  def edit
+    authorize @digest
+  end
+
   def update
+    authorize @digest
     if @digest.update(digest_params)
       redirect_to weekly_digest_path(@digest), notice: 'Digest saved.'
     else
@@ -47,13 +50,22 @@ class WeeklyDigestsController < ApplicationController
   end
 
   def publish
+    authorize @digest
     @digest.publish!
     redirect_to weekly_digest_path(@digest), notice: 'Digest published.'
   end
 
   def unpublish
+    authorize @digest
     @digest.unpublish!
     redirect_to weekly_digest_path(@digest), notice: 'Digest moved back to draft.'
+  end
+
+  def generate
+    week_start_date = @digest.week_start_date
+    DigestSummarizerJob.perform_later(@digest.user_id, week_start_date.to_s)
+    redirect_to edit_weekly_digest_path(@digest),
+                notice: "Generating your digest — check back in about 15 seconds and refresh."
   end
 
   private

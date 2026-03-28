@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DigestMailer < ApplicationMailer
+  layout false # template provides full HTML doc with inline styles
+
   def new_digest(follower, digest)
     @follower = follower
     @digest = digest

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
@@ -28,4 +29,14 @@ Rails.application.routes.draw do
       patch :skip
     end
   end
+
+  # Twilio inbound webhook
+  post '/webhooks/twilio', to: 'twilio_webhooks#inbound'
+
+  # Phone verification
+  resource :phone_verification, only: %i[new create] do
+    get  :verify
+    post :confirm
+  end
 end
+# rubocop:enable Metrics/BlockLength

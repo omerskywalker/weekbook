@@ -1,0 +1,29 @@
+<div class="mx-auto max-w-md animate-slide-up">
+  <div class="mb-6">
+    <h1 class="font-display text-3xl font-light text-ink-900">Enter your code</h1>
+    <p class="mt-1 text-sm text-ink-500">We sent a 6-digit code to <%= current_user.phone %>. It expires in 10 minutes.</p>
+  </div>
+
+  <div class="rounded-xl border border-cream-300 bg-white p-6 shadow-warm">
+    <%= form_with url: confirm_phone_verification_path, method: :post do |f| %>
+      <div>
+        <%= label_tag :code, 'Verification code', class: 'mb-1 block text-sm font-medium text-ink-700' %>
+        <%= text_field_tag :code, nil,
+            placeholder: '123456',
+            autofocus: true,
+            inputmode: 'numeric',
+            autocomplete: 'one-time-code',
+            class: 'w-full rounded-lg border border-cream-400 bg-white px-3 py-2.5 text-sm text-ink-800 placeholder-ink-300 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber tracking-widest text-center text-lg' %>
+      </div>
+      <div class="mt-5">
+        <%= submit_tag 'Verify',
+            class: 'w-full cursor-pointer rounded-lg bg-amber py-2.5 text-sm font-medium text-ink-900 transition-all duration-200 hover:bg-amber-light' %>
+      </div>
+    <% end %>
+
+    <p class="mt-4 text-center text-xs text-ink-400">
+      Wrong number?
+      <%= link_to 'Start over', new_phone_verification_path, class: 'text-ink-600 underline underline-offset-2' %>
+    </p>
+  </div>
+</div>

@@ -16,6 +16,10 @@ class User < ApplicationRecord
 
   validates :display_name, length: { maximum: 50 }, allow_blank: true
   validates :bio, length: { maximum: 280 }, allow_blank: true
+  validates :phone,
+            format: { with: /\A\+[1-9]\d{7,14}\z/, message: 'must be in E.164 format' },
+            allow_blank: true,
+            uniqueness: { allow_blank: true }
 
   has_many :active_follows,
            class_name: 'Follow',
@@ -41,6 +45,31 @@ class User < ApplicationRecord
 
   def name_for_display
     display_name.presence || username.presence || email.split('@').first
+  end
+
+  # Phone verification
+  def send_verification_sms!
+    return if phone.blank?
+
+    code = SecureRandom.random_number(100_000..999_999).to_s
+    update!(
+      phone_verification_code: code,
+      phone_verification_sent_at: Time.current
+    )
+    TwilioService.send_sms!(to: phone, body: "Your Weekbook verification code: #{code}")
+  end
+
+  def verify_phone!(code) # rubocop:disable Naming/PredicateMethod
+    return false unless phone_verification_code == code
+    return false if phone_verification_sent_at < 10.minutes.ago
+
+    update!(phone_verified: true, phone_verification_code: nil)
+    true
+  end
+
+  def self.find_by_phone(number)
+    # Normalize to E.164 before lookup
+    find_by(phone: PhoneUtils.normalize(number))
   end
 
   def following?(other_user)

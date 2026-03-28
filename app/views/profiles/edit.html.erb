@@ -76,6 +76,26 @@
         <p class="mt-1 text-xs text-ink-400">Max 280 characters.</p>
       </div>
 
+      <%# Phone number %>
+      <div class="border-t border-cream-200 pt-5">
+        <p class="mb-1 text-sm font-medium text-ink-700">SMS prompts</p>
+        <% if current_user.phone_verified? %>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-ink-600"><%= current_user.phone %></span>
+            <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Verified</span>
+          </div>
+          <p class="mt-1 text-xs text-ink-400">You'll receive weekly prompts by text. Reply from anywhere to add entries.</p>
+        <% elsif current_user.phone.present? %>
+          <p class="text-sm text-ink-500"><%= current_user.phone %> — not yet verified</p>
+          <%= link_to 'Verify now →', verify_phone_verification_path,
+              class: 'mt-1 inline-block text-sm font-medium text-amber hover:text-amber-dark transition-colors' %>
+        <% else %>
+          <%= link_to 'Add phone number →', new_phone_verification_path,
+              class: 'text-sm font-medium text-amber hover:text-amber-dark transition-colors' %>
+          <p class="mt-0.5 text-xs text-ink-400">Get weekly prompts by text. No app needed.</p>
+        <% end %>
+      </div>
+
       <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
         <%= f.submit "Save profile",
             class: "cursor-pointer rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink-700 hover:-translate-y-px active:translate-y-0" %>

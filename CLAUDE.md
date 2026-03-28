@@ -9,6 +9,33 @@
 
 > **Updated after every coding session. Read this first to understand current state.**
 
+**2026-03-28 — Rails 7.2 Upgrade + Email Notifications + SMS (PRs #17, #18, TBD)**
+
+Merged three PRs overnight. Here's what changed:
+
+**PR #17 — Rails 7.1 → 7.2 upgrade (merged)**
+Bumped the Rails constraint in Gemfile from `~> 7.1` to `~> 7.2`, ran `bundle update rails`, updated `config.load_defaults` to `7.2`. This resolves CVE-2026-33658 (activestorage DoS via multi-range requests) which was being suppressed with `--ignore` in CI. The `bundle-audit` step now passes cleanly with no ignores needed.
+
+**PR #18 — Follower email notifications (open, CI green)**
+When a digest is published, `NotifyFollowersJob` fans out `DigestMailer#new_digest` to every follower via `deliver_later`. The email is a branded HTML + plain-text message: amber dot, Weekbook name, digest week label, summary line teaser, "Read the full digest →" CTA button in amber. Fixed a mailer layout bug — the template is a self-contained email HTML doc (inline styles), so `DigestMailer` now sets `layout false` to prevent double-wrapping. Added `have_enqueued_job(NotifyFollowersJob)` spec for the publish action. 117 specs all green.
+
+**To activate email in production:** Add these Render env vars: `SMTP_HOST` (e.g. `smtp.postmarkapp.com`), `SMTP_PORT` (`587`), `SMTP_USERNAME`, `SMTP_PASSWORD`, `APP_HOST` (`weekbook.onrender.com`). Postmark has a free tier of 100 emails/month — good enough to start.
+
+**PR TBD — Phase 7 SMS ingestion (building now)**
+Building while you read this. When merged:
+- Users can add + verify their phone number from profile settings (OTP flow)
+- Inbound SMS from Twilio → creates an `Entry` for the current week automatically
+- Replying "SKIP" skips the week's prompt dispatch
+- `SmsPromptJob` (Sidekiq `low` queue) sends weekly SMS prompts to all verified users on Monday
+- Twilio credentials are already configured on Render (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`)
+
+**Important Render action items:**
+- Rename `redis_url` → `REDIS_URL` (uppercase) in Render env vars — both web service and worker need it
+- Verify your Twilio Account SID starts with `AC` not `MG` — `MG` is a Messaging Service SID. Find the Account SID in Twilio Console → top-left dashboard card
+- Rotate your Twilio Auth Token — it was shared in chat and should be treated as compromised. Go to Twilio Console → Account → API keys & tokens → rotate the auth token, then update the Render env var
+
+---
+
 **2026-03-27 — CI Pipeline + Pre-push Hooks (PR #16, branch `feat/ci`)**
 
 Set up the full quality gate so bad code can't sneak in undetected.

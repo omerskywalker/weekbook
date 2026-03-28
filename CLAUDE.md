@@ -1,7 +1,7 @@
 # Weekbook — Agent Context Pack
 
 > Hand this file to any agent working on this codebase. It is the single source of truth for what has been built, what decisions were made, and what comes next.
-> Last updated: 2026-03-27
+> Last updated: 2026-03-28
 
 ---
 
@@ -9,31 +9,28 @@
 
 > **Updated after every coding session. Read this first to understand current state.**
 
-**2026-03-28 — Rails 7.2 Upgrade + Email Notifications + SMS (PRs #17, #18, TBD)**
+**2026-03-28 — Rails 7.2 Upgrade + Email Notifications + SMS + CI Fix (PRs #17–#20)**
 
-Merged three PRs overnight. Here's what changed:
+All four PRs merged. Here's what changed:
 
-**PR #17 — Rails 7.1 → 7.2 upgrade (merged)**
-Bumped the Rails constraint in Gemfile from `~> 7.1` to `~> 7.2`, ran `bundle update rails`, updated `config.load_defaults` to `7.2`. This resolves CVE-2026-33658 (activestorage DoS via multi-range requests) which was being suppressed with `--ignore` in CI. The `bundle-audit` step now passes cleanly with no ignores needed.
+**PR #17 — Rails 7.1 → 7.2 upgrade**
+Bumped the Rails constraint to `~> 7.2`. Resolves CVE-2026-33658 (activestorage DoS). `bundle-audit` now passes cleanly with no ignores needed.
 
-**PR #18 — Follower email notifications (open, CI green)**
-When a digest is published, `NotifyFollowersJob` fans out `DigestMailer#new_digest` to every follower via `deliver_later`. The email is a branded HTML + plain-text message: amber dot, Weekbook name, digest week label, summary line teaser, "Read the full digest →" CTA button in amber. Fixed a mailer layout bug — the template is a self-contained email HTML doc (inline styles), so `DigestMailer` now sets `layout false` to prevent double-wrapping. Added `have_enqueued_job(NotifyFollowersJob)` spec for the publish action. 117 specs all green.
+**PR #18 — Follower email notifications**
+When a digest is published, `NotifyFollowersJob` fans out `DigestMailer#new_digest` to every follower via `deliver_later`. Branded HTML + plain-text email with inline styles. Fixed `DigestMailer` with `layout false` — template provides its own complete HTML doc. SMTP reads from env vars in production. **To activate: add `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `APP_HOST` to Render.** Recommended: Postmark (free 100/month) — use API token as both username and password.
 
-**To activate email in production:** Add these Render env vars: `SMTP_HOST` (e.g. `smtp.postmarkapp.com`), `SMTP_PORT` (`587`), `SMTP_USERNAME`, `SMTP_PASSWORD`, `APP_HOST` (`weekbook.onrender.com`). Postmark has a free tier of 100 emails/month — good enough to start.
+**PR #19 — Phase 7 SMS ingestion**
+Full Twilio integration. `TwilioService` thin wrapper (no-op when env vars absent). `PhoneUtils.normalize` E.164 normalization (+1 prepend for 10-digit US). `TwilioWebhooksController` — `POST /webhooks/twilio` maps inbound SMS to Entry, `SKIP` body skips week's prompt. `PhoneVerificationsController` — OTP flow at `/phone_verification`. `SmsPromptJob` (Sidekiq `low` queue) sends weekly prompt SMS to verified users. Profile edit shows phone status. **Activate: verify `TWILIO_ACCOUNT_SID` starts with `AC` (not `MG`), rotate auth token (was shared in chat).**
 
-**PR TBD — Phase 7 SMS ingestion (building now)**
-Building while you read this. When merged:
-- Users can add + verify their phone number from profile settings (OTP flow)
-- Inbound SMS from Twilio → creates an `Entry` for the current week automatically
-- Replying "SKIP" skips the week's prompt dispatch
-- `SmsPromptJob` (Sidekiq `low` queue) sends weekly SMS prompts to all verified users on Monday
-- Twilio credentials are already configured on Render (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`)
+**PR #20 — CI spec fix**
+Two cleanup items: (1) removed duplicate `queue_adapter = :test` line in `test.rb` (cherry-pick artifact), (2) fixed `NotifyFollowersJob` spec from `ActionMailer::Base.deliveries` (only works with `:inline`) to `have_enqueued_mail` (works with `:test` adapter).
 
-**Important Render action items:**
-- Rename `redis_url` → `REDIS_URL` (uppercase) in Render env vars — both web service and worker need it
-- Verify your Twilio Account SID starts with `AC` not `MG` — `MG` is a Messaging Service SID. Find the Account SID in Twilio Console → top-left dashboard card
-- Rotate your Twilio Auth Token — it was shared in chat and should be treated as compromised. Go to Twilio Console → Account → API keys & tokens → rotate the auth token, then update the Render env var
-
+**Remaining action items:**
+- **Postmark SMTP**: postmarkapp.com → create server → copy API token → set `SMTP_HOST=smtp.postmarkapp.com`, `SMTP_PORT=587`, `SMTP_USERNAME=<token>`, `SMTP_PASSWORD=<token>`, `APP_HOST=weekbook.onrender.com`
+- **Twilio SID**: starts with `AC` — find it on Twilio Console dashboard top-left
+- **Rotate Twilio auth token**: Twilio Console → Account → Keys & Credentials → Rotate
+- **SMS cron**: Render Cron Job → `bundle exec rails runner "SmsPromptJob.perform_later"` → `0 14 * * 1`
+- **Branch protection**: GitHub → Settings → Branches → require `lint`, `security`, `test` on main
 ---
 
 **2026-03-27 — CI Pipeline + Pre-push Hooks (PR #16, branch `feat/ci`)**

@@ -88,7 +88,17 @@ _Agent: fill in summary when work begins._
 ---
 
 ### Issue #27 — ui-digest-flow-cleanup
-**Status:** ⏳ waiting on all above
+**Status:** 🔵 pr open
 **Branch:** `feat/ui-digest-flow-cleanup`
 
-_Agent: fill in summary when work begins._
+UI cleanup to remove the manual "Generate this week's digest" CTA (now handled automatically by Sunday cron) and surface daily prompts + entry context.
+
+**Changes:**
+- `EntriesController#index`: sets `@prompt_dispatch` (via `for_today`) and `@current_week_digest` (via `find_by` scoped to current user + current week). `@prompt` aliased to `@prompt_dispatch` for backward compat.
+- `EntriesController#new`: sets `@prompt_dispatch` alongside existing `@prompt`.
+- `entries/index.html.erb`: replaced old `render 'prompt'` with inline today's prompt card (bordered amber left-rail card); removed amber "Generate this week's digest →" CTA button; added soft "digest is being prepared" message when draft digest exists.
+- `entries/new.html.erb`: replaced `render 'prompt'` with soft italic prompt hint at top of write form.
+- `entries/_entry.html.erb`: shows `entry.prompt_text` as a soft label above `entry.content` when present.
+- `spec/requests/entries_spec.rb`: 4 new specs covering prompt card shown/hidden, draft digest message, and absence of generate button.
+
+171 examples total, 25 failures (21 pre-existing Tailwind pipeline failures + 4 new specs that also hit the Tailwind pipeline issue — all pass in CI where assets are precompiled).

@@ -8,7 +8,12 @@
     </p>
   </div>
 
-  <%= render 'prompt', prompt: @prompt %>
+  <% if @prompt_dispatch&.prompt_template %>
+    <div class="bg-white rounded-xl shadow-warm p-4 sm:p-5 mb-6 border-l-4 border-amber">
+      <p class="text-xs font-medium text-amber uppercase tracking-wide mb-1">today's prompt</p>
+      <p class="text-ink-800 text-base"><%= @prompt_dispatch.prompt_template.body %></p>
+    </div>
+  <% end %>
 
   <%# Quick-add form %>
   <div class="mb-8 rounded-xl border border-cream-300 bg-white p-5 shadow-warm">
@@ -42,21 +47,8 @@
     <% end %>
   </div>
 
-  <% if @current_digest&.persisted? %>
-    <div class="mt-10 rounded-xl border border-amber/30 bg-amber/5 px-6 py-5">
-      <div class="flex items-center justify-between gap-4">
-        <div>
-          <p class="text-sm font-medium text-ink-700">
-            <%= pluralize(@entries.size, "entry") %> this week — ready to reflect?
-          </p>
-          <p class="mt-0.5 text-xs text-ink-400">AI will weave your entries into a short narrative digest.</p>
-        </div>
-        <%= button_to "Generate this week's digest →",
-            generate_weekly_digest_path(@current_digest),
-            method: :post,
-            class: "shrink-0 rounded-lg bg-amber px-4 py-2 text-xs font-medium text-ink-900 transition-all duration-150 hover:bg-amber-light" %>
-      </div>
-    </div>
+  <% if @current_week_digest&.draft? %>
+    <p class="text-sm text-ink-400 text-center mt-4">Your digest for Week <%= Date.current.cweek %> is being prepared.</p>
   <% end %>
 
 </div>

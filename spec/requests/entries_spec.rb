@@ -13,6 +13,46 @@ RSpec.describe 'Entries', type: :request do
         get entries_path
         expect(response).to have_http_status(:ok)
       end
+
+      context 'with a prompt dispatch for today' do
+        let(:template) { create(:prompt_template, body: 'What made you smile today?') }
+        let!(:dispatch) do
+          create(:prompt_dispatch, user: user, prompt_template: template, date: Date.current)
+        end
+
+        it "shows today's prompt card" do
+          get entries_path
+          expect(response.body).to include('today&#39;s prompt')
+          expect(response.body).to include('What made you smile today?')
+        end
+      end
+
+      context 'without a prompt dispatch for today' do
+        it 'does not show the prompt card' do
+          get entries_path
+          expect(response.body).not_to include('today&#39;s prompt')
+        end
+      end
+
+      context 'when a draft digest exists for the current week' do
+        let!(:digest) do
+          create(:weekly_digest, user: user, status: 'draft',
+                                 week_start_date: Date.current.beginning_of_week(:monday))
+        end
+        let!(:entry) { create(:entry, user: user) }
+
+        it 'shows the soft draft message' do
+          get entries_path
+          expect(response.body).to include('is being prepared')
+          expect(response.body).to include("Week #{Date.current.cweek}")
+        end
+      end
+
+      it 'does not show the generate digest button' do
+        get entries_path
+        expect(response.body).not_to include('Generate this week&#39;s digest')
+        expect(response.body).not_to include('generate_weekly_digest')
+      end
     end
 
     context 'when signed out' do

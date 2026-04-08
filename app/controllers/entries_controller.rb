@@ -8,20 +8,24 @@ class EntriesController < ApplicationController
     @week_start = Date.current.beginning_of_week(:monday)
     @entries = current_user.entries.for_week(@week_start).recent
     @entry = Entry.new
-    @prompt = PromptDispatch.for_today(current_user)
+    @prompt_dispatch = PromptDispatch.for_today(current_user)
+    @prompt = @prompt_dispatch
+    @current_week_digest = current_user.weekly_digests.find_by(week_start_date: @week_start)
     return unless @entries.any?
 
-    @current_digest = current_user.weekly_digests.find_or_create_by(
+    @current_digest = @current_week_digest || current_user.weekly_digests.find_or_create_by(
       week_start_date: @week_start,
       week_number: @week_start.cweek,
       year: @week_start.cwyear
     )
+    @current_week_digest = @current_digest if @current_week_digest.nil?
   end
 
   def new
     @entry = Entry.new
     @week_start = Date.current.beginning_of_week(:monday)
-    @prompt = PromptDispatch.for_today(current_user)
+    @prompt_dispatch = PromptDispatch.for_today(current_user)
+    @prompt = @prompt_dispatch
   end
 
   def create

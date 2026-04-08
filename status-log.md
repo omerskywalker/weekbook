@@ -45,7 +45,7 @@ _Agent: fill in summary of changes made, migrations added, models updated, spec 
 **Status:** 🟡 in progress
 **Branch:** `feat/prompt-pool-refresh`
 
-_Agent: fill in summary of prompts added, categories used, seed count._
+_Agent: actively working — replacing 22 old prompts (reflection/gratitude/challenge/highlight) with 55 new warm, casual daily prompts across 6 categories: joy, gratitude, connection, self, memory, anticipation. Old prompts will be marked inactive. Category validation updated in model._
 
 ---
 

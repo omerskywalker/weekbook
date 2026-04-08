@@ -4,7 +4,7 @@ class SmsPromptJob < ApplicationJob
   queue_as :low
 
   def perform
-    return unless TwilioService.twilio_configured?
+    return unless SmsService.configured?
 
     week_start = Date.current.beginning_of_week(:monday)
 
@@ -13,7 +13,7 @@ class SmsPromptJob < ApplicationJob
       next unless prompt&.prompt_template
 
       message = build_message(week_start, prompt.prompt_template.body)
-      TwilioService.send_sms!(to: user.phone, body: message)
+      SmsService.send_sms!(to: user.phone, body: message)
     end
   end
 

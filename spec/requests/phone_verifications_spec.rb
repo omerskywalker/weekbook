@@ -6,7 +6,7 @@ RSpec.describe 'PhoneVerifications', type: :request do
   let(:user) { create(:user) }
 
   before do
-    allow(TwilioService).to receive(:send_sms!).and_return(nil)
+    allow(SmsService).to receive(:send_sms!).and_return(nil)
   end
 
   describe 'GET /phone_verification/new' do
@@ -40,7 +40,7 @@ RSpec.describe 'PhoneVerifications', type: :request do
 
       context 'with a valid phone number' do
         it 'saves the phone number and sends an OTP' do
-          expect(TwilioService).to receive(:send_sms!).once
+          expect(SmsService).to receive(:send_sms!).once
           post phone_verification_path, params: { phone: '+15551234567' }
           expect(user.reload.phone).to eq('+15551234567')
         end

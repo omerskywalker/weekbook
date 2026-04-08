@@ -96,6 +96,20 @@
         <% end %>
       </div>
 
+      <%# Auto-publish toggle %>
+      <div class="border-t border-cream-200 pt-5">
+        <div class="flex items-start gap-3">
+          <%= f.check_box :auto_publish_digest,
+              class: "mt-0.5 h-4 w-4 cursor-pointer rounded border-cream-400 text-amber focus:ring-amber focus:ring-offset-0",
+              id: "user_auto_publish_digest" %>
+          <div>
+            <%= f.label :auto_publish_digest, "Automatically publish my weekly digest",
+                class: "block text-sm font-medium text-ink-700 cursor-pointer" %>
+            <p class="mt-0.5 text-xs text-ink-400">Your digest will be published to your profile each week without review.</p>
+          </div>
+        </div>
+      </div>
+
       <div class="flex items-center gap-3 border-t border-cream-200 pt-4">
         <%= f.submit "Save profile",
             class: "cursor-pointer rounded-lg bg-ink-900 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink-700 hover:-translate-y-px active:translate-y-0" %>

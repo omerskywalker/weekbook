@@ -80,10 +80,18 @@ Cron job to add on Render after merge: `bundle exec rails runner "WeeklyDigestAu
 ---
 
 ### Issue #26 — digest-owner-notifications
-**Status:** ⏳ waiting on #24 + #25
+**Status:** 🔵 pr open
 **Branch:** `feat/digest-owner-notifications`
 
-_Agent: fill in summary when work begins._
+Two new `DigestMailer` methods: `digest_ready(digest)` and `digest_auto_published(digest)`. Each has HTML + plain-text templates with inline brand styles (off-black `#0f0f0f`, cream `#fdfcf9`, amber `#d4a853`). `digest_ready` links to the edit page; `digest_auto_published` links to the public digest view. Both use `ENV.fetch('APP_HOST', 'localhost:3000')` for full URLs.
+
+Removed the `respond_to?(:digest_ready)` guard from `DigestSummarizerJob#notify_owner` — mailer methods now exist and will be called directly.
+
+Profile edit UI: added `auto_publish_digest` checkbox with descriptive label and helper text. `ProfilesController#profile_params` updated to permit the new field.
+
+Specs: 10 new examples in `digest_mailer_spec` covering subject, recipient, body content, and links for both methods. 2 new examples in `profiles_spec` covering enable/disable toggle. 4 new examples in `digest_summarizer_job_spec` covering `notify_owner` branching (enqueues correct mailer, publishes when auto_publish=true).
+
+185 examples, 21 pre-existing Tailwind pipeline failures, 0 new failures.
 
 ---
 

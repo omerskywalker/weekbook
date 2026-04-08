@@ -13,4 +13,24 @@ class DigestMailer < ApplicationMailer
       subject: "#{@author.name_for_display} published their Week #{@digest.week_number} digest"
     )
   end
+
+  def digest_ready(digest)
+    @digest = digest
+    @user = digest.user
+
+    mail(
+      to: @user.email,
+      subject: "Your Weekbook digest for Week #{@digest.week_number} is ready"
+    )
+  end
+
+  def digest_auto_published(digest)
+    @digest = digest
+    @user = digest.user
+
+    mail(
+      to: @user.email,
+      subject: "Your Weekbook digest for Week #{@digest.week_number} has been published"
+    )
+  end
 end

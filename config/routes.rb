@@ -30,8 +30,10 @@ Rails.application.routes.draw do
     end
   end
 
-  # Twilio inbound webhook
-  post '/webhooks/twilio', to: 'twilio_webhooks#inbound'
+  # Telnyx inbound SMS webhook
+  namespace :webhooks do
+    post 'sms', to: 'sms#receive'
+  end
 
   # Phone verification
   resource :phone_verification, only: %i[new create] do

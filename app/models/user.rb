@@ -56,7 +56,7 @@ class User < ApplicationRecord
       phone_verification_code: code,
       phone_verification_sent_at: Time.current
     )
-    TwilioService.send_sms!(to: phone, body: "Your Weekbook verification code: #{code}")
+    SmsService.send_sms!(to: phone, body: "Your Weekbook verification code: #{code}")
   end
 
   def verify_phone!(code) # rubocop:disable Naming/PredicateMethod

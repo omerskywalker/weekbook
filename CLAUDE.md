@@ -3,11 +3,43 @@
 > Hand this file to any agent working on this codebase. It is the single source of truth for what has been built, what decisions were made, and what comes next.
 > Last updated: 2026-03-28
 
+## Wiki (read before starting any task)
+- **Project wiki:** `WIKI/index.md`
+- **Gotchas:** `WIKI/gotchas.md`
+- **Agent guide:** `WIKI/agents.md`
+- **Global wiki:** `~/.claude/wiki/index.md`
+
 ---
 
 ## Last Session — What Was Done
 
 > **Updated after every coding session. Read this first to understand current state.**
+
+**2026-04-07 — Twilio → Telnyx SMS migration**
+
+Swapped the SMS provider from Twilio to Telnyx. Twilio now requires 10DLC brand registration for all US A2P traffic even for personal/low-volume use, which blocked setup. Telnyx does not require this for low-volume personal use.
+
+**What changed:**
+- `gem 'twilio-ruby'` → `gem 'telnyx'` in Gemfile
+- `app/services/twilio_service.rb` → `app/services/sms_service.rb` (provider-agnostic name; uses `Telnyx::Message.create`)
+- `app/controllers/twilio_webhooks_controller.rb` → `app/controllers/webhooks/sms_controller.rb` (namespaced; parses Telnyx JSON webhook instead of TwiML params; returns `head :ok` not TwiML XML)
+- Route: `POST /webhooks/twilio` → `POST /webhooks/sms`
+- `config/initializers/telnyx.rb` — sets `Telnyx.api_key` from env
+- All `TwilioService` references updated to `SmsService` throughout jobs, models, specs
+- Signature verification: `TELNYX_PUBLIC_KEY` env var (optional, skip verifies when absent — same pattern as before)
+- `.env.example` updated: `TELNYX_API_KEY`, `TELNYX_PHONE_NUMBER`, `TELNYX_PUBLIC_KEY`
+- All Twilio-specific specs replaced with Telnyx equivalents
+
+**Key difference — webhook format:** Telnyx sends JSON (not form params). `from` is at `data.payload.from.phone_number`, message body at `data.payload.text`. Response is plain `200 OK`, not TwiML XML.
+
+**Remaining action items:**
+- Sign up at telnyx.com → free credits on signup
+- Buy a number (~$1/mo) from their portal
+- Set Telnyx number's inbound webhook URL: `https://weekbook.onrender.com/webhooks/sms`
+- Set `TELNYX_API_KEY`, `TELNYX_PHONE_NUMBER` on Render (and optionally `TELNYX_PUBLIC_KEY` from Telnyx portal → API Keys → Public Key)
+- `bundle install` to pull in the `telnyx` gem
+
+---
 
 **2026-03-28 — Rails 7.2 Upgrade + Email Notifications + SMS + CI Fix (PRs #17–#20)**
 
@@ -27,8 +59,6 @@ Two cleanup items: (1) removed duplicate `queue_adapter = :test` line in `test.r
 
 **Remaining action items:**
 - **Postmark SMTP**: postmarkapp.com → create server → copy API token → set `SMTP_HOST=smtp.postmarkapp.com`, `SMTP_PORT=587`, `SMTP_USERNAME=<token>`, `SMTP_PASSWORD=<token>`, `APP_HOST=weekbook.onrender.com`
-- **Twilio SID**: starts with `AC` — find it on Twilio Console dashboard top-left
-- **Rotate Twilio auth token**: Twilio Console → Account → Keys & Credentials → Rotate
 - **SMS cron**: Render Cron Job → `bundle exec rails runner "SmsPromptJob.perform_later"` → `0 14 * * 1`
 - **Branch protection**: GitHub → Settings → Branches → require `lint`, `security`, `test` on main
 ---
@@ -321,9 +351,9 @@ GITHUB_CLIENT_SECRET=...
 ```
 REDIS_URL=...              # Render internal Redis URL — add when wiring Sidekiq
 OPENAI_API_KEY=...         # Phase 6
-TWILIO_ACCOUNT_SID=...     # Phase 7
-TWILIO_AUTH_TOKEN=...      # Phase 7
-TWILIO_PHONE_NUMBER=...    # Phase 7
+TELNYX_API_KEY=...         # Phase 7
+TELNYX_PHONE_NUMBER=...    # Phase 7
+TELNYX_PUBLIC_KEY=...      # Phase 7 (optional — for webhook signature verification)
 ```
 
 ### Seeds

@@ -2,13 +2,13 @@
 
 FactoryBot.define do
   factory :prompt_template do
-    sequence(:body) { |n| "What was the highlight of your week? (#{n})" }
-    category { 'highlight' }
+    sequence(:body) { |n| "what's something that made you smile this week? (#{n})" }
+    category { 'joy' }
     active { true }
 
-    trait :reflection do
-      category { 'reflection' }
-      body { 'What surprised you most this week?' }
+    trait :gratitude do
+      category { 'gratitude' }
+      body { "what's something small you're grateful for this week?" }
     end
 
     trait :inactive do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PromptTemplate < ApplicationRecord
-  CATEGORIES = %w[reflection gratitude challenge highlight].freeze
+  CATEGORIES = %w[joy gratitude connection self memory anticipation].freeze
 
   has_many :prompt_dispatches, dependent: :destroy
 

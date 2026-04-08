@@ -104,9 +104,12 @@ RSpec.describe 'Webhooks::Sms' do
     end
 
     context 'when TELNYX_PUBLIC_KEY is set and signature is invalid' do
+      let(:fake_wh) { instance_double(StandardWebhooks::Webhook) }
+
       before do
         stub_const('ENV', ENV.to_h.merge('TELNYX_PUBLIC_KEY' => 'test_public_key'))
-        allow(Telnyx::Webhook).to receive(:construct_event).and_raise(StandardError, 'bad sig')
+        allow(StandardWebhooks::Webhook).to receive(:new).and_return(fake_wh)
+        allow(fake_wh).to receive(:verify).and_raise(StandardError, 'bad sig')
       end
 
       it 'returns 403 forbidden' do
@@ -123,10 +126,12 @@ RSpec.describe 'Webhooks::Sms' do
 
     context 'when TELNYX_PUBLIC_KEY is set and signature is valid' do
       let!(:user) { create(:user, phone: '+15551234567', phone_verified: true) }
+      let(:fake_wh) { instance_double(StandardWebhooks::Webhook) }
 
       before do
         stub_const('ENV', ENV.to_h.merge('TELNYX_PUBLIC_KEY' => 'test_public_key'))
-        allow(Telnyx::Webhook).to receive(:construct_event).and_return(true)
+        allow(StandardWebhooks::Webhook).to receive(:new).and_return(fake_wh)
+        allow(fake_wh).to receive(:verify).and_return(true)
       end
 
       it 'creates an entry' do

@@ -15,6 +15,18 @@ RSpec.describe PromptTemplate, type: :model do
     it 'requires a valid category' do
       expect(build(:prompt_template, category: 'unknown')).not_to be_valid
     end
+
+    it 'accepts all six supported categories' do
+      %w[joy gratitude connection self memory anticipation].each do |cat|
+        expect(build(:prompt_template, category: cat)).to be_valid
+      end
+    end
+
+    it 'rejects legacy categories' do
+      %w[reflection challenge highlight].each do |cat|
+        expect(build(:prompt_template, category: cat)).not_to be_valid
+      end
+    end
   end
 
   describe '.random_for_week' do

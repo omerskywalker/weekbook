@@ -60,17 +60,27 @@ RSpec.describe 'Webhooks::Sms' do
         end
       end
 
+      context 'when a dispatch exists for today' do
+        let!(:user) { create(:user, phone: '+15551234567', phone_verified: true) }
+        let!(:template) { create(:prompt_template, body: 'What made you smile today?') }
+        let!(:dispatch) do
+          create(:prompt_dispatch, user: user, prompt_template: template, date: Date.current)
+        end
+
+        it 'stores prompt_text on the created entry' do
+          post_sms(from: '+15551234567', text: 'Had a wonderful walk in the park')
+          expect(user.entries.last.prompt_text).to eq('What made you smile today?')
+        end
+      end
+
       context 'when text is SKIP (case-insensitive)' do
         let!(:user) { create(:user, phone: '+15551234567', phone_verified: true) }
         let!(:template) { create(:prompt_template) }
         let!(:dispatch) do
-          create(:prompt_dispatch,
-                 user: user,
-                 prompt_template: template,
-                 week_start_date: Date.current.beginning_of_week(:monday))
+          create(:prompt_dispatch, user: user, prompt_template: template, date: Date.current)
         end
 
-        it 'skips the current week dispatch' do
+        it 'skips the current day dispatch' do
           post_sms(from: '+15551234567', text: 'SKIP')
           expect(dispatch.reload.status).to eq('skipped')
         end

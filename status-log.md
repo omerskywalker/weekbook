@@ -20,10 +20,10 @@ Restructuring from a weekly-prompt model to a **daily-prompt model with auto-dig
 
 | Order | Issue | Branch | PR | Status |
 |---|---|---|---|---|
-| 1 | #22 | `feat/daily-dispatch-foundation` | — | 🟡 in progress |
+| 1 | #22 | `feat/daily-dispatch-foundation` | #29 | ✅ done |
 | 2 | #23 | `feat/prompt-pool-refresh` | — | 🟡 in progress |
-| 3 | #24 | `feat/daily-sms-dispatch` | — | ⏳ waiting on #22 |
-| 4 | #25 | `feat/auto-digest-generation` | — | ⏳ waiting on #22 |
+| 3 | #24 | `feat/daily-sms-dispatch` | — | 🔵 pr open |
+| 4 | #25 | `feat/auto-digest-generation` | — | 🟡 in progress |
 | 5 | #26 | `feat/digest-owner-notifications` | — | ⏳ waiting on #24 + #25 |
 | 6 | #27 | `feat/ui-digest-flow-cleanup` | — | ⏳ waiting on all above |
 
@@ -54,15 +54,19 @@ _Agent: fill in summary of prompts added, categories used, seed count._
 ---
 
 ### Issue #24 — daily-sms-dispatch
-**Status:** ⏳ waiting on #22
+**Status:** 🔵 pr open
 **Branch:** `feat/daily-sms-dispatch`
 
-_Agent: fill in summary when work begins._
+`SmsPromptJob`: added dedup guard (`PromptDispatch.exists?` check before `for_today`) to prevent double-sends; rewrote `build_message` — drops "Weekbook — today's prompt:" header, new tone is the bare prompt body followed by reply instructions. `Webhooks::SmsController#handle_skip` now looks up dispatch by `date:` (not `week_start_date:`); `handle_entry` looks up today's dispatch and stores `dispatch.prompt_template.body` as `prompt_text` on the entry.
+
+Spec changes: `sms_prompt_job_spec` — replaced single "sends SMS" test with 4 focused specs (not configured, already-dispatched skip, sends+creates dispatch, reply instructions, unverified phones). `webhooks/sms_spec` — updated SKIP context factory to use `date:`, added new "when a dispatch exists for today" context verifying `prompt_text` is set on the entry.
+
+18 examples, 0 failures. 0 RuboCop offenses.
 
 ---
 
 ### Issue #25 — auto-digest-generation
-**Status:** ⏳ waiting on #22
+**Status:** 🟡 in progress
 **Branch:** `feat/auto-digest-generation`
 
 _Agent: fill in summary when work begins._

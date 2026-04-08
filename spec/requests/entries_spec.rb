@@ -22,7 +22,7 @@ RSpec.describe 'Entries', type: :request do
 
         it "shows today's prompt card" do
           get entries_path
-          expect(response.body).to include('today's prompt')
+          expect(response.body).to include("today's prompt")
           expect(response.body).to include('What made you smile today?')
         end
       end
@@ -30,7 +30,7 @@ RSpec.describe 'Entries', type: :request do
       context 'without a prompt dispatch for today' do
         it 'does not show the prompt card' do
           get entries_path
-          expect(response.body).not_to include('today's prompt')
+          expect(response.body).not_to include("today's prompt")
         end
       end
 

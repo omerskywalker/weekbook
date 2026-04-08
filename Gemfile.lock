@@ -145,6 +145,7 @@ GEM
     drb (2.2.3)
     erb (6.0.2)
     erubi (1.13.1)
+    event_emitter (0.2.6)
     event_stream_parser (1.0.0)
     factory_bot (6.5.6)
       activesupport (>= 6.1.0)
@@ -223,6 +224,7 @@ GEM
     multi_xml (0.8.1)
       bigdecimal (>= 3.1, < 5)
     multipart-post (2.4.1)
+    mutex_m (0.3.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
     net-imap (0.6.3)
@@ -430,16 +432,16 @@ GEM
     tailwindcss-ruby (4.2.0-aarch64-linux-gnu)
     tailwindcss-ruby (4.2.0-arm64-darwin)
     tailwindcss-ruby (4.2.0-x86_64-linux-gnu)
+    telnyx (5.68.2)
+      cgi
+      connection_pool
+      websocket-client-simple (~> 0.8)
     thor (1.5.0)
     timeout (0.6.1)
     tsort (0.2.0)
     turbo-rails (2.0.23)
       actionpack (>= 7.1.0)
       railties (>= 7.1.0)
-    twilio-ruby (7.10.1)
-      faraday (>= 0.9, < 3.0)
-      jwt (>= 1.5, < 4.0)
-      nokogiri (>= 1.6, < 2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.2.0)
@@ -461,6 +463,11 @@ GEM
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
     websocket (1.2.11)
+    websocket-client-simple (0.9.0)
+      base64
+      event_emitter
+      mutex_m
+      websocket
     websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
@@ -507,8 +514,8 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   tailwindcss-rails
+  telnyx
   turbo-rails
-  twilio-ruby
   tzinfo-data
   view_component
   web-console

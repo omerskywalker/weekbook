@@ -11,7 +11,7 @@ class PromptTemplate < ApplicationRecord
   scope :active, -> { where(active: true) }
   scope :for_category, ->(cat) { where(category: cat) }
 
-  def self.random_for_week
+  def self.random_for_week(_week_start = nil)
     active.order('RANDOM()').first
   end
 end

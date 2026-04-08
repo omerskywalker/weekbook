@@ -48,6 +48,7 @@ gem 'image_processing', '~> 1.2'
 gem 'aws-sdk-s3', require: false
 
 # SMS integration
+gem 'standardwebhooks'
 gem 'telnyx'
 
 # AI summarization

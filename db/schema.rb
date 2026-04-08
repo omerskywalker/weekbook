@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_28_044409) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_08_045314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_28_044409) do
     t.date "week_start_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "prompt_text"
     t.index ["user_id", "week_start_date"], name: "index_entries_on_user_id_and_week_start_date"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
@@ -82,8 +83,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_28_044409) do
     t.date "week_start_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "date", null: false
     t.index ["prompt_template_id"], name: "index_prompt_dispatches_on_prompt_template_id"
-    t.index ["user_id", "week_start_date"], name: "index_prompt_dispatches_on_user_id_and_week_start_date", unique: true
+    t.index ["user_id", "date"], name: "index_prompt_dispatches_on_user_id_and_date", unique: true
     t.index ["user_id"], name: "index_prompt_dispatches_on_user_id"
   end
 
@@ -111,6 +113,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_28_044409) do
     t.boolean "phone_verified", default: false, null: false
     t.string "phone_verification_code"
     t.datetime "phone_verification_sent_at"
+    t.boolean "auto_publish_digest", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true, where: "(phone IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -41,11 +41,11 @@ jobs:
         run: bundle exec brakeman --no-pager -q --exit-on-warn -x EOLRuby,EOLRails
 
       - name: Bundle audit (CVE check)
-        # CVE-2026-33658: activestorage 7.1 DoS via multi-range requests —
-        # requires Rails 7.2+ upgrade, tracked separately
+        # CVE-2026-33658: activestorage 7.1 DoS — resolved by Rails 7.2 upgrade
+        # CVE-2026-33946: mcp gem SSE hijack — transitive via rubocop, not a runtime dep
         run: |
           bundle exec bundle-audit update
-          bundle exec bundle-audit check --ignore CVE-2026-33658
+          bundle exec bundle-audit check --ignore CVE-2026-33658 --ignore CVE-2026-33946
 
   # ─── Tests ───────────────────────────────────────────────────────────────────
   test:

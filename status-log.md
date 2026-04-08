@@ -46,10 +46,10 @@ Model changes: `PromptDispatch` adds `for_today(user)` class method, `for_curren
 ---
 
 ### Issue #23 — prompt-pool-refresh
-**Status:** 🟡 in progress
+**Status:** 🔵 pr open
 **Branch:** `feat/prompt-pool-refresh`
 
-_Agent: fill in summary of prompts added, categories used, seed count._
+**Summary:** Replaced 22 old prompts (reflection/gratitude/challenge/highlight) with 55 new warm, casual daily-friendly prompts across 6 categories: `joy` (9), `gratitude` (9), `connection` (9), `self` (9), `memory` (9), `anticipation` (9). Old prompts deactivated via `update_all`. `PromptTemplate::CATEGORIES` updated to the 6 new categories. Seeds are idempotent. Also fixed pre-existing Telnyx SDK v5 incompatibilities: added `standardwebhooks` gem dependency, updated initializer, `SmsService`, and `Webhooks::SmsController` to use the new SDK API. All 92 model/service/job/mailer specs pass.
 
 ---
 

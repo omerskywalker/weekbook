@@ -43,9 +43,17 @@ class OpenaiSummarizer
     lines = []
     lines << "Weekly prompt: #{@prompt_text}" if @prompt_text.to_s.present?
     lines << "\nMy entries this week:\n"
-    @entries.each_with_index do |entry, i|
-      lines << "#{i + 1}. #{entry.content}"
-    end
+    lines << build_entries_text
     lines.join("\n")
+  end
+
+  def build_entries_text
+    @entries.each_with_index.map do |entry, i|
+      if entry.respond_to?(:prompt_text) && entry.prompt_text.present?
+        "#{i + 1}. Q: #{entry.prompt_text}\nA: #{entry.content}"
+      else
+        "#{i + 1}. #{entry.content}"
+      end
+    end.join("\n")
   end
 end

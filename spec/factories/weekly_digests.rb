@@ -14,6 +14,10 @@ FactoryBot.define do
       status { 'published' }
     end
 
+    trait :archived do
+      status { 'archived' }
+    end
+
     trait :for_last_week do
       week_start_date { 1.week.ago.to_date.beginning_of_week(:monday) }
     end

@@ -46,12 +46,17 @@ module Webhooks
     end
 
     def verify_telnyx_signature
-      public_key = ENV['TELNYX_PUBLIC_KEY']
-      return unless public_key.present?
+      public_key = ENV.fetch('TELNYX_PUBLIC_KEY', nil)
+      return if public_key.blank?
 
-      sig   = request.headers['telnyx-signature-ed25519'].to_s
-      ts    = request.headers['telnyx-timestamp'].to_s
-      Telnyx::Webhook.construct_event(request.raw_post, sig, ts, public_key)
+      sig = request.headers['telnyx-signature-ed25519'].to_s
+      ts  = request.headers['telnyx-timestamp'].to_s
+      wh  = StandardWebhooks::Webhook.new(public_key)
+      wh.verify(request.raw_post, {
+                  'webhook-id' => ts,
+                  'webhook-timestamp' => ts,
+                  'webhook-signature' => sig
+                })
     rescue StandardError
       head :forbidden
     end

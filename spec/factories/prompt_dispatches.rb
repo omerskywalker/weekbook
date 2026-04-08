@@ -7,6 +7,7 @@ FactoryBot.define do
     dispatched_at { Time.current }
     status { 'pending' }
     week_start_date { Date.current.beginning_of_week(:monday) }
+    date { Date.current }
 
     trait :responded do
       status { 'responded' }

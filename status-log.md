@@ -34,10 +34,14 @@ Restructuring from a weekly-prompt model to a **daily-prompt model with auto-dig
 ## Changes Log
 
 ### Issue #22 — daily-dispatch-foundation
-**Status:** 🟡 in progress
+**Status:** 🔵 pr open
 **Branch:** `feat/daily-dispatch-foundation`
 
-_Agent: fill in summary of changes made, migrations added, models updated, spec count._
+3 migrations: `add_date_to_prompt_dispatches` (adds `date` column, replaces unique index on `[user_id, week_start_date]` with `[user_id, date]`, backfills existing rows), `add_prompt_text_to_entries` (nullable `prompt_text` string), `add_auto_publish_digest_to_users` (boolean default false).
+
+Model changes: `PromptDispatch` adds `for_today(user)` class method, `for_current_week` now returns a relation, uniqueness validated on `:date`. `EntriesController` and `SmsPromptJob` updated to use `for_today`. Also fixed Telnyx 5.x compatibility: `SmsService` uses `Telnyx::Client`, webhook controller uses `StandardWebhooks::Webhook`. Added `standardwebhooks` gem.
+
+159 examples, 21 pre-existing Tailwind pipeline failures (not introduced by this PR).
 
 ---
 

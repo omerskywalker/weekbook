@@ -19,6 +19,7 @@ Layout/LineLength:
     - "config/initializers/devise.rb"
     - "db/migrate/*.rb"
     - "db/seeds.rb"
+    - "db/seeds/**/*"
 
 Metrics/MethodLength:
   Max: 20

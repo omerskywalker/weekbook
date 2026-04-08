@@ -1,0 +1,11 @@
+Your Weekbook digest for Week <%= @digest.week_number %> has been published.
+
+<%= @digest.week_range_label %>
+
+Your Week <%= @digest.week_number %> digest was auto-generated and published to your profile. Your followers can now read it.
+
+View your digest: <%= weekly_digest_url(@digest, host: ENV.fetch('APP_HOST', 'localhost:3000')) %>
+
+---
+You're receiving this because auto-publish is enabled on your Weekbook profile.
+To change this, visit: <%= edit_profile_url(host: ENV.fetch('APP_HOST', 'localhost:3000')) %>

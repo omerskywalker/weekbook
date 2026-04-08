@@ -53,6 +53,36 @@ RSpec.describe DigestSummarizerJob, type: :job do
           described_class.new.perform(user.id, digest.id)
           expect(digest.reload.summary_line).to eq('It was a genuinely good week')
         end
+
+        context 'when auto_publish_digest is false' do
+          before { user.update!(auto_publish_digest: false) }
+
+          it 'enqueues digest_ready mailer' do
+            expect do
+              described_class.new.perform(user.id, digest.id)
+            end.to have_enqueued_mail(DigestMailer, :digest_ready)
+          end
+
+          it 'does not publish the digest' do
+            described_class.new.perform(user.id, digest.id)
+            expect(digest.reload.status).to eq('draft')
+          end
+        end
+
+        context 'when auto_publish_digest is true' do
+          before { user.update!(auto_publish_digest: true) }
+
+          it 'publishes the digest' do
+            described_class.new.perform(user.id, digest.id)
+            expect(digest.reload.status).to eq('published')
+          end
+
+          it 'enqueues digest_auto_published mailer' do
+            expect do
+              described_class.new.perform(user.id, digest.id)
+            end.to have_enqueued_mail(DigestMailer, :digest_auto_published)
+          end
+        end
       end
 
       context 'when OpenaiSummarizer returns nil' do

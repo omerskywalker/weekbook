@@ -1,0 +1,10 @@
+Your Weekbook digest for Week <%= @digest.week_number %> is ready.
+
+<%= @digest.week_range_label %>
+
+Your weekly digest has been generated from this week's entries. Take a look, make any edits you'd like, and publish when you're ready.
+
+Review and publish: <%= edit_weekly_digest_url(@digest, host: ENV.fetch('APP_HOST', 'localhost:3000')) %>
+
+---
+You're receiving this because your Weekbook digest was auto-generated.

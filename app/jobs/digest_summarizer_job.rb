@@ -26,8 +26,6 @@ class DigestSummarizerJob < ApplicationJob
   private
 
   def notify_owner(digest)
-    return unless DigestMailer.respond_to?(:digest_ready)
-
     if digest.user.auto_publish_digest
       digest.publish!
       DigestMailer.digest_auto_published(digest).deliver_later

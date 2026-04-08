@@ -62,5 +62,27 @@ RSpec.describe 'Profiles', type: :request do
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
+
+    it 'enables auto_publish_digest when the checkbox is submitted' do
+      user = create(:user, auto_publish_digest: false)
+      sign_in user
+
+      patch profile_path, params: {
+        user: { auto_publish_digest: '1' }
+      }
+
+      expect(user.reload.auto_publish_digest).to be(true)
+    end
+
+    it 'disables auto_publish_digest when the checkbox is unchecked' do
+      user = create(:user, auto_publish_digest: true)
+      sign_in user
+
+      patch profile_path, params: {
+        user: { auto_publish_digest: '0' }
+      }
+
+      expect(user.reload.auto_publish_digest).to be(false)
+    end
   end
 end

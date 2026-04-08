@@ -57,7 +57,11 @@ Model changes: `PromptDispatch` adds `for_today(user)` class method, `for_curren
 **Status:** 🔵 pr open
 **Branch:** `feat/daily-sms-dispatch`
 
-_Agent: fill in summary when work begins._
+`SmsPromptJob`: added dedup guard (`PromptDispatch.exists?` check before `for_today`) to prevent double-sends; rewrote `build_message` — drops "Weekbook — today's prompt:" header, new tone is the bare prompt body followed by reply instructions. `Webhooks::SmsController#handle_skip` now looks up dispatch by `date:` (not `week_start_date:`); `handle_entry` looks up today's dispatch and stores `dispatch.prompt_template.body` as `prompt_text` on the entry.
+
+Spec changes: `sms_prompt_job_spec` — replaced single "sends SMS" test with 4 focused specs (not configured, already-dispatched skip, sends+creates dispatch, reply instructions, unverified phones). `webhooks/sms_spec` — updated SKIP context factory to use `date:`, added new "when a dispatch exists for today" context verifying `prompt_text` is set on the entry.
+
+18 examples, 0 failures. 0 RuboCop offenses.
 
 ---
 

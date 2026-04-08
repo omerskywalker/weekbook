@@ -28,18 +28,17 @@ module Webhooks
     private
 
     def handle_skip(user)
-      dispatch = PromptDispatch.find_by(
-        user: user,
-        week_start_date: Date.current.beginning_of_week(:monday)
-      )
+      dispatch = PromptDispatch.find_by(user: user, date: Date.current)
       dispatch&.skip!
       head :ok
     end
 
     def handle_entry(user, body)
+      dispatch = PromptDispatch.find_by(user: user, date: Date.current)
       entry = user.entries.build(
         content: body,
-        week_start_date: Date.current.beginning_of_week(:monday)
+        week_start_date: Date.current.beginning_of_week(:monday),
+        prompt_text: dispatch&.prompt_template&.body
       )
       entry.save
       head :ok

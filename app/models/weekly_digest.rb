@@ -48,6 +48,10 @@ class WeeklyDigest < ApplicationRecord
     status == 'draft'
   end
 
+  def archived?
+    status == 'archived'
+  end
+
   def publish!
     update!(status: 'published')
   end

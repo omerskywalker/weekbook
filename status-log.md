@@ -20,10 +20,10 @@ Restructuring from a weekly-prompt model to a **daily-prompt model with auto-dig
 
 | Order | Issue | Branch | PR | Status |
 |---|---|---|---|---|
-| 1 | #22 | `feat/daily-dispatch-foundation` | — | 🟡 in progress |
-| 2 | #23 | `feat/prompt-pool-refresh` | — | 🔵 pr open |
-| 3 | #24 | `feat/daily-sms-dispatch` | — | ⏳ waiting on #22 |
-| 4 | #25 | `feat/auto-digest-generation` | — | ⏳ waiting on #22 |
+| 1 | #22 | `feat/daily-dispatch-foundation` | #29 | ✅ done |
+| 2 | #23 | `feat/prompt-pool-refresh` | — | 🟡 in progress |
+| 3 | #24 | `feat/daily-sms-dispatch` | — | 🔵 pr open |
+| 4 | #25 | `feat/auto-digest-generation` | — | 🔵 pr open |
 | 5 | #26 | `feat/digest-owner-notifications` | — | ⏳ waiting on #24 + #25 |
 | 6 | #27 | `feat/ui-digest-flow-cleanup` | — | ⏳ waiting on all above |
 
@@ -34,7 +34,7 @@ Restructuring from a weekly-prompt model to a **daily-prompt model with auto-dig
 ## Changes Log
 
 ### Issue #22 — daily-dispatch-foundation
-**Status:** 🔵 pr open
+**Status:** ✅ done
 **Branch:** `feat/daily-dispatch-foundation`
 
 3 migrations: `add_date_to_prompt_dispatches` (adds `date` column, replaces unique index on `[user_id, week_start_date]` with `[user_id, date]`, backfills existing rows), `add_prompt_text_to_entries` (nullable `prompt_text` string), `add_auto_publish_digest_to_users` (boolean default false).
@@ -54,7 +54,7 @@ Model changes: `PromptDispatch` adds `for_today(user)` class method, `for_curren
 ---
 
 ### Issue #24 — daily-sms-dispatch
-**Status:** ⏳ waiting on #22
+**Status:** 🔵 pr open
 **Branch:** `feat/daily-sms-dispatch`
 
 _Agent: fill in summary when work begins._
@@ -62,10 +62,20 @@ _Agent: fill in summary when work begins._
 ---
 
 ### Issue #25 — auto-digest-generation
-**Status:** ⏳ waiting on #22
+**Status:** 🔵 pr open
 **Branch:** `feat/auto-digest-generation`
 
-_Agent: fill in summary when work begins._
+New `WeeklyDigestAutoGenerateJob` — iterates all users, finds those with entries this week, find-or-creates a draft digest, enqueues `DigestSummarizerJob` for each. Skips published and archived digests.
+
+Updated `DigestSummarizerJob` signature from `(user_id, week_start_date_str)` to `(user_id, digest_id)`. After saving narrative, calls `notify_owner` which auto-publishes + emails if `user.auto_publish_digest` is true, otherwise emails a "digest ready" notification. Both mailer methods guarded with `respond_to?` so they're no-ops until Issue #26 adds them.
+
+Updated `OpenaiSummarizer#build_entries_text` to emit `Q: <prompt>\nA: <content>` format when `entry.prompt_text` is present, giving GPT-4o richer context.
+
+Added `archived?` predicate to `WeeklyDigest`. Added `:archived` factory trait.
+
+Cron job to add on Render after merge: `bundle exec rails runner "WeeklyDigestAutoGenerateJob.perform_later"` on schedule `0 20 * * 0` (Sunday 8pm UTC).
+
+171 examples, 21 pre-existing Tailwind pipeline failures, 0 new failures.
 
 ---
 

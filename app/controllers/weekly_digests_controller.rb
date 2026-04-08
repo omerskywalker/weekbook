@@ -61,8 +61,7 @@ class WeeklyDigestsController < ApplicationController
   end
 
   def generate
-    week_start_date = @digest.week_start_date
-    DigestSummarizerJob.perform_later(@digest.user_id, week_start_date.to_s)
+    DigestSummarizerJob.perform_later(@digest.user_id, @digest.id)
     redirect_to edit_weekly_digest_path(@digest),
                 notice: 'Generating your digest — check back in about 15 seconds and refresh.'
   end

@@ -39,4 +39,6 @@
 !/app/assets/builds/.keep
 
 *.md
-!/README.md
+!/README.md!CLAUDE.md
+!status-log.md
+!WIKI/*.md

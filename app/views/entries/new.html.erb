@@ -7,7 +7,9 @@
       <p class="mt-1 text-sm text-ink-500"><%= Date.current.strftime('%A, %B %-d') %></p>
     </div>
 
-    <%= render 'prompt', prompt: @prompt %>
+    <% if @prompt_dispatch&.prompt_template %>
+      <p class="text-sm text-ink-400 mb-4"><em><%= @prompt_dispatch.prompt_template.body %></em></p>
+    <% end %>
 
     <%= form_with model: @entry, url: entries_path do |f| %>
       <%= f.text_area :content,

@@ -5,7 +5,7 @@ class SmsService
     return unless configured?
 
     client = Telnyx::Client.new(api_key: ENV.fetch('TELNYX_API_KEY'))
-    client.messages.create(
+    client.messages.send_long_code(
       from: ENV.fetch('TELNYX_PHONE_NUMBER'),
       to: to,
       text: body
